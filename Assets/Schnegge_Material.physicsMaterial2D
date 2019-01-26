@@ -7,5 +7,5 @@ PhysicsMaterial2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Schnegge_Material
-  friction: 0.95
+  friction: 0.18
   bounciness: 0.4
