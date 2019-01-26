@@ -9,7 +9,6 @@ namespace Scripts.Level
     public class LevelImporter : MonoBehaviour
     {
         [SerializeField] private LevelImportSettings _settings;
-        [SerializeField] private Vector2 _levelOffset;
 
         [SerializeField] private Texture2D _importedTexture;
         [SerializeField] private LevelPart _generatedLevel;
@@ -32,7 +31,7 @@ namespace Scripts.Level
             _levelPoints = new List<Vector2>();
             _flyingIslandMapping = new Dictionary<Color, List<Vector2>>();
             
-            _generatedLevel = new GameObject("LevelPart").AddComponent<LevelPart>();
+            _generatedLevel = new GameObject(_importedTexture.name).AddComponent<LevelPart>();
             _generatedLevel.Reset();
         }
 
@@ -70,6 +69,7 @@ namespace Scripts.Level
             edgeCollider.points = points.ToArray();
             
             var lineRenderer = edgeColliderObject.AddComponent<LineRenderer>();
+            lineRenderer.useWorldSpace = false;
             lineRenderer.positionCount = points.Count;
             lineRenderer.SetPositions(points.Select(vec => (Vector3) vec).ToArray());
         }
@@ -87,14 +87,14 @@ namespace Scripts.Level
                 case ColorAction.None:
                     return;
                 case ColorAction.GenerateColliderPoint:
-                    _levelPoints.Add(_settings.GetPosition(width, height) + _levelOffset);
+                    _levelPoints.Add(_settings.GetPosition(width, height));
                     return;
                 case ColorAction.GenerateFlyingIslandPoint:
                     if (!_flyingIslandMapping.ContainsKey(pixelColor))
                     {
                         _flyingIslandMapping.Add(pixelColor, new List<Vector2>());
                     }
-                    _flyingIslandMapping[pixelColor].Add(_settings.GetPosition(width, height) + _levelOffset);
+                    _flyingIslandMapping[pixelColor].Add(_settings.GetPosition(width, height));
                     return;
                 case ColorAction.GenerateAttackTrigger:
                     break;
