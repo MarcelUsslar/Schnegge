@@ -16,7 +16,7 @@ public class SoundService : MonoBehaviour
     [UsedImplicitly] private void Start()
     {
         _instance = this;
-        //Play(_mainMusic, true);
+        Play(_mainMusic, true);
     }
     
     public static Action PlaySound(Sound sound, bool loop = false)

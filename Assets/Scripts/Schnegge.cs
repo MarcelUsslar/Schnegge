@@ -23,6 +23,17 @@ public class Schnegge : MonoBehaviour
     private float _timeSinceBeginningOfJump;
     private float _timeSinceLastWalkingTransition;
 
+    private bool _isOnGround = true;
+
+    private Action WalkSoundDisposable
+    {
+        set
+        {
+            _walkSoundDisposable?.Invoke();
+            _walkSoundDisposable = value;
+        }
+    }
+
     private void Start()
     {
         _schneggeStates = GetComponentsInChildren<SchneggeState>();
@@ -36,7 +47,7 @@ public class Schnegge : MonoBehaviour
         if (IsJumping)
             _state = TransitionJump();
         
-        if (Input.GetKeyUp(KeyCode.Mouse0) && IsOnGround)
+        if (Input.GetKeyUp(KeyCode.Mouse0) && _isOnGround)
             Jump();
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -46,7 +57,7 @@ public class Schnegge : MonoBehaviour
             _rigidBody.angularVelocity = 0f;
             _rigidBody.sharedMaterial.bounciness = 0f;
             _state = State.Walk1;
-            _walkSoundDisposable = SoundService.PlaySound(Sound.Walk, true);
+            WalkSoundDisposable = SoundService.PlaySound(Sound.Walk, true);
         }
             
         
@@ -67,8 +78,6 @@ public class Schnegge : MonoBehaviour
         SmoothSpeed();
     }
 
-    public bool IsOnGround => true;
-
     private State TransitionJump()
     {
         _timeSinceBeginningOfJump += Time.deltaTime;
@@ -82,12 +91,9 @@ public class Schnegge : MonoBehaviour
 
     private void Jump()
     {
-        if (_walkSoundDisposable != null)
-        {
-            _walkSoundDisposable();
-            _walkSoundDisposable = null;
-        }
+        WalkSoundDisposable = null;
 
+        _isOnGround = false;
         _state = State.Jump;
         _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpSpeed);
         _rigidBody.sharedMaterial.bounciness = _bounciness;
@@ -165,6 +171,6 @@ public class Schnegge : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        Debug.Log("Schnegge");
+        _isOnGround = _state != State.Jump;
     }
 }
