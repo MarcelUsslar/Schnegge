@@ -5,4 +5,5 @@
     Hit,
     Jump,
     Walk,
+    Kick,
 }
