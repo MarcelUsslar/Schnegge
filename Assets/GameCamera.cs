@@ -13,6 +13,6 @@ public class GameCamera : MonoBehaviour
     {
         var pos = _schneggeTransform.position;
 
-        transform.position = new Vector3(pos.x, pos.y, -10);
+        transform.position = new Vector3(pos.x, 0, -10);
     }
 }

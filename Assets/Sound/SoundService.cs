@@ -32,7 +32,7 @@ public class SoundService : MonoBehaviour
         var audioSource = GetAvailableAudioSource();
 
         audioSource.clip = audioClip;
-        audioSource.Play(1);
+        audioSource.Play();
         audioSource.loop = loop;
     }
 
