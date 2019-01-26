@@ -6,4 +6,5 @@
     Jump,
     Walk,
     Kick,
+    Danger,
 }

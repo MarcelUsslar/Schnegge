@@ -171,6 +171,49 @@ public class Schnegge : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        _isOnGround = _state != State.Jump;
+        _isOnGround = !IsJumping;
+
+        var danger = other.gameObject.GetComponentInParent<Danger>();
+
+        if (danger == null)
+            return;
+        
+        SoundService.PlaySound(Sound.Danger);
+
+        switch (_state)
+        {
+            case State.Shell:
+                Block(danger);
+                break;
+            case State.Dead:
+                break;
+            case State.Walk1:
+                Danger(danger);
+                break;
+            case State.Walk2:
+                Danger(danger);
+                break;
+            case State.Jump:
+                PerfectBlock(danger);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException("_state", _state, null);
+        }
+    }
+
+    private void Danger(Danger danger)
+    {
+        SoundService.PlaySound(Sound.Hit);
+    }
+
+    private void PerfectBlock(Danger danger)
+    {
+        PerfectlyBlockedLastFrame = true;
+        Block(danger);
+    }
+
+    private void Block(Danger danger)
+    {
+        SoundService.PlaySound(Sound.Block);
     }
 }

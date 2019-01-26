@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Stalactite : MonoBehaviour
+public class Stalactite : Danger
 {
     [SerializeField] private Rigidbody2D _stalactiteBot;
     [SerializeField] private Animator _animator;
@@ -18,6 +18,12 @@ public class Stalactite : MonoBehaviour
 
         _animator.SetTrigger("Wiggle");
         Invoke(nameof(DropStalactite), 1f);
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+            Release();
     }
 
     private void DropStalactite()
