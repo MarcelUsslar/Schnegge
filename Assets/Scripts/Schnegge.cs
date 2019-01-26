@@ -22,6 +22,7 @@ public class Schnegge : MonoBehaviour
     private float _speedX = 2f;
     private float _timeSinceBeginningOfJump;
     private float _timeSinceLastWalkingTransition;
+    private bool _rotationLocked;
 
     private bool _isOnGround = true;
 
@@ -56,7 +57,9 @@ public class Schnegge : MonoBehaviour
             _rigidBody.transform.rotation = Quaternion.identity;
             _rigidBody.angularVelocity = 0f;
             _rigidBody.sharedMaterial.bounciness = 0f;
+            _rigidBody.sharedMaterial.friction = 0f;
             _state = State.Walk1;
+            _rotationLocked = true;
             WalkSoundDisposable = SoundService.PlaySound(Sound.Walk, true);
         }
             
@@ -76,6 +79,16 @@ public class Schnegge : MonoBehaviour
         UpdateGravityForce();
 
         SmoothSpeed();
+
+        if (_rotationLocked)
+            ClampRotation();
+    }
+
+    private void ClampRotation()
+    {
+        var rot = transform.rotation;
+        var rotZClamped = Mathf.Clamp(rot.z, -0.375f, 0.375f);
+        transform.rotation = new Quaternion(rot.x, rot.y, rotZClamped, rot.w);
     }
 
     private State TransitionJump()
@@ -92,11 +105,12 @@ public class Schnegge : MonoBehaviour
     private void Jump()
     {
         WalkSoundDisposable = null;
-
+        _rotationLocked = false;
         _isOnGround = false;
         _state = State.Jump;
         _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpSpeed);
         _rigidBody.sharedMaterial.bounciness = _bounciness;
+        _rigidBody.sharedMaterial.friction = 1f;
         _speedX /= 4;
         UpdateSpeed();
         SoundService.PlaySound(Sound.Jump);
