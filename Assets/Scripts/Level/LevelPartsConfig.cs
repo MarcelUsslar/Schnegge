@@ -2,7 +2,7 @@
 
 namespace Scripts.Level
 {
-    [CreateAssetMenu(menuName = "Level/Level Parts Config")]
+    [CreateAssetMenu(menuName = "Level/Level Parts Config", fileName = "LevelPartsConfig")]
     public class LevelPartsConfig : ScriptableObject
     {
         [SerializeField] private int _maxLevelParts = 10;

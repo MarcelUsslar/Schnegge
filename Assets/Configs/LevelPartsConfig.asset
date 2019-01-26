@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 027bca19f9394fa4ba4975b6c9dd81e8, type: 3}
+  m_Name: LevelPartsConfig
+  m_EditorClassIdentifier: 
+  _maxLevelParts: 2
+  _updateInterval: 1
+  _tutorialParts:
+  - {fileID: 6170034338401189788, guid: 8e5fc320abe3e794481a8d4e422f6a3b, type: 3}
+  _parts:
+  - {fileID: 6170034338401189788, guid: 8e5fc320abe3e794481a8d4e422f6a3b, type: 3}
