@@ -7,6 +7,13 @@ namespace Level
     [CreateAssetMenu(menuName = "Level/Level Import Setting", fileName = "LevelImportSettings")]
     public class LevelImportSettings : ScriptableObject
     {
+        [Serializable]
+        private class ColorMapping
+        {
+            public Color Color;
+            public ColorAction ColorAction;
+        }
+
         [SerializeField] private int _pixelPerUnit;
         [SerializeField] private float _unitSize;
         [SerializeField] private ColorMapping[] _colorMapping;
@@ -25,13 +32,6 @@ namespace Level
                 return ColorAction.None;
 
             return foundMapping.ColorAction;
-        }
-
-        [Serializable]
-        private class ColorMapping
-        {
-            public Color Color;
-            public ColorAction ColorAction;
         }
     }
 }

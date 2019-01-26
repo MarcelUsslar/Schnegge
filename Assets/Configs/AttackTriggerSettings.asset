@@ -9,15 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fac0efeca871aca43b55356881b19a91, type: 3}
-  m_Name: ImporterSettings
+  m_Script: {fileID: 11500000, guid: 4f3733c9f2b209a45b7eff8aef1e785c, type: 3}
+  m_Name: AttackTriggerSettings
   m_EditorClassIdentifier: 
-  _pixelPerUnit: 2
-  _unitSize: 4
-  _colorMapping:
-  - Color: {r: 0, g: 0, b: 0, a: 1}
-    ColorAction: 1
-  - Color: {r: 0, g: 0, b: 1, a: 1}
-    ColorAction: 2
+  _attackMapping:
   - Color: {r: 1, g: 0, b: 0, a: 1}
-    ColorAction: 3
+    AttackType: 1
+  - Color: {r: 1, g: 1, b: 0, a: 1}
+    AttackType: 2
+  - Color: {r: 1, g: 0, b: 1, a: 1}
+    AttackType: 3
