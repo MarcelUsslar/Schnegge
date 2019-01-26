@@ -58,7 +58,7 @@ namespace Scripts.Level
             Handles.DrawWireDisc(targetObject.position, Vector3.forward, size);
         }
 
-        private void OnValidate()
+        public void Reset()
         {
             if (_levelStartPoint == null)
             {
@@ -70,9 +70,9 @@ namespace Scripts.Level
             }
         }
 
-        private void Reset()
+        private void OnValidate()
         {
-            OnValidate();
+            Reset();
         }
 
         private GameObject CreateObject(string objName, Vector2 position)
