@@ -12,15 +12,15 @@ namespace Scripts.Level
 
         private static LevelGenerator _instance;
 
+        private readonly List<LevelPart> _parts = new List<LevelPart>(KMaxLevelParts);
+        private readonly List<int> _mapGenerationCode = new List<int>();
+
         [SerializeField] private LevelPartsConfig _config;
 
         private Schnegge _schnegge;
 
         private int _currentLevelIndex;
-        private List<int> _mapGenerationCode;
-
-        private readonly List<LevelPart> _parts = new List<LevelPart>(KMaxLevelParts);
-
+        
         private void Start()
         {
             StartCoroutine(GenerateMap());
@@ -62,7 +62,7 @@ namespace Scripts.Level
         private bool SchneggePastPart(LevelPart checkedPart)
         {
             // TODO check if schnegge is past last part
-            return true;
+            return false;
         }
 
         private bool SchneggeBeforePart(LevelPart checkedPart)
@@ -81,6 +81,11 @@ namespace Scripts.Level
 
             _parts.Add(part);
 
+            if (_mapGenerationCode.Count <= _currentLevelIndex)
+            {
+                _mapGenerationCode.Add(randomPart);
+            }
+
             _currentLevelIndex++;
 
             return part;
@@ -88,14 +93,14 @@ namespace Scripts.Level
 
         private LevelPart RegeneratePreviousPart(LevelPart followingPart)
         {
+            _currentLevelIndex--;
+
             var part = Instantiate(_config.Parts[_mapGenerationCode[_currentLevelIndex]], Vector3.zero, Quaternion.identity, null);
             part.name = "Part" + _mapGenerationCode[_currentLevelIndex] + " Index" + _currentLevelIndex;
 
             part.SetPositionAsPrevious(followingPart);
 
             _parts.Insert(0, part);
-
-            _currentLevelIndex--;
 
             return part;
         }
