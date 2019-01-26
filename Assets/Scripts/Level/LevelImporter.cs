@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Attacks;
 using UnityEngine;
 
 namespace Level
@@ -13,6 +14,7 @@ namespace Level
 
         private List<Vector2> _levelPoints;
         private Dictionary<Color, List<Vector2>> _flyingIslandMapping;
+        private Dictionary<Color, List<Vector2>> _attackTriggerMapping;
 
         public void Import()
         {
@@ -21,35 +23,72 @@ namespace Level
             
             Setup();
 
+            ReadTexture();
+
             GenerateCollider();
+
+            GenerateAttackTriggers();
+
+            SetBoundingPoints();
         }
 
         private void Setup()
         {
             _levelPoints = new List<Vector2>();
             _flyingIslandMapping = new Dictionary<Color, List<Vector2>>();
-            
-            _generatedLevel = new GameObject(_importedTexture.name).AddComponent<LevelPart>();
+            _attackTriggerMapping = new Dictionary<Color, List<Vector2>>();
+
+            _generatedLevel = CreateChildObject(_importedTexture.name, null).AddComponent<LevelPart>();
             _generatedLevel.Reset();
         }
 
-        private void GenerateCollider()
+        private void ReadTexture()
         {
             for (var width = 0; width < _importedTexture.width; width++)
             {
                 for (var height = _importedTexture.height - 1; height >= 0; height--)
                 {
-                    GeneratePoint(width, height);
+                    EvaluatePoint(width, height);
                 }
             }
+        }
 
+        private void GenerateCollider()
+        {
             GenerateEdgeCollider(_levelPoints, "Level");
             foreach (var key in _flyingIslandMapping.Keys)
             {
                 GenerateEdgeCollider(_flyingIslandMapping[key], key.ToString());
             }
+        }
 
-            SetBoundingPoints();
+        private void GenerateEdgeCollider(List<Vector2> points, string objectName)
+        {
+            var edgeColliderObject = CreateChildObject(objectName, _generatedLevel.transform);
+
+            var edgeCollider = edgeColliderObject.AddComponent<EdgeCollider2D>();
+            edgeCollider.points = points.ToArray();
+
+            var lineRenderer = edgeColliderObject.AddComponent<LineRenderer>();
+            lineRenderer.useWorldSpace = false;
+            lineRenderer.widthMultiplier = 0.1f * _settings.UnitSize;
+            lineRenderer.positionCount = points.Count;
+            lineRenderer.SetPositions(points.Select(vec => (Vector3)vec).ToArray());
+        }
+
+        private void GenerateAttackTriggers()
+        {
+            foreach (var key in _attackTriggerMapping.Keys)
+            {
+                var attackTriggerParent = CreateChildObject($"AttackTrigger: {key}", _generatedLevel.transform);
+                for (var i = 0; i < _attackTriggerMapping[key].Count; i++)
+                {
+                    var triggerObject = CreateChildObject($"Trigger{i}", attackTriggerParent.transform);
+                    var attackTrigger = triggerObject.AddComponent<AttackTrigger>();
+                    attackTrigger.Setup(_settings.UnitSize);
+                    attackTrigger.transform.position = _attackTriggerMapping[key][i];
+                }
+            }
         }
 
         private void SetBoundingPoints()
@@ -58,22 +97,14 @@ namespace Level
             _generatedLevel.LevelEndPoint.position = _levelPoints[_levelPoints.Count - 1];
         }
 
-        private void GenerateEdgeCollider(List<Vector2> points, string objectName)
+        private GameObject CreateChildObject(string objectName, Transform parent)
         {
             var edgeColliderObject = new GameObject(objectName);
-            edgeColliderObject.transform.SetParent(_generatedLevel.gameObject.transform);
-
-            var edgeCollider = edgeColliderObject.AddComponent<EdgeCollider2D>();
-            edgeCollider.points = points.ToArray();
-            
-            var lineRenderer = edgeColliderObject.AddComponent<LineRenderer>();
-            lineRenderer.useWorldSpace = false;
-            lineRenderer.widthMultiplier = 0.1f * _settings.UnitSize;
-            lineRenderer.positionCount = points.Count;
-            lineRenderer.SetPositions(points.Select(vec => (Vector3) vec).ToArray());
+            edgeColliderObject.transform.SetParent(parent);
+            return edgeColliderObject;
         }
 
-        private void GeneratePoint(int width, int height)
+        private void EvaluatePoint(int width, int height)
         {
             var pixelColor = _importedTexture.GetPixel(width, height);
 
@@ -89,18 +120,25 @@ namespace Level
                     _levelPoints.Add(_settings.GetPosition(width, height));
                     return;
                 case ColorAction.GenerateFlyingIslandPoint:
-                    if (!_flyingIslandMapping.ContainsKey(pixelColor))
-                    {
-                        _flyingIslandMapping.Add(pixelColor, new List<Vector2>());
-                    }
-                    _flyingIslandMapping[pixelColor].Add(_settings.GetPosition(width, height));
+                    AddPointToMapping(_flyingIslandMapping, pixelColor, _settings.GetPosition(width, height));
                     return;
                 case ColorAction.GenerateAttackTrigger:
+                    AddPointToMapping(_attackTriggerMapping, pixelColor, _settings.GetPosition(width, height));
                     break;
                 default:
                     Debug.LogError("No definition for case: " + action + " yet");
                     return;
             }
+        }
+
+        public void AddPointToMapping(Dictionary<Color, List<Vector2>> mapping, Color color, Vector2 position)
+        {
+            if (!mapping.ContainsKey(color))
+            {
+                mapping.Add(color, new List<Vector2>());
+            }
+
+            mapping[color].Add(position);
         }
     }
 }
