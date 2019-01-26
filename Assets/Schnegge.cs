@@ -9,6 +9,7 @@ public class Schnegge : MonoBehaviour
     private const float KJumpDuration = 0.3f;
     private const float KWalkTransitionTime = 0.5f;
     private const float KJumpSpeed = 3f;
+    private const float KBounciness = 0.4f;
 
     [SerializeField] private Rigidbody2D _rigidBody;
     
@@ -38,7 +39,14 @@ public class Schnegge : MonoBehaviour
             Jump();
 
         if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            _speedX = 2f;
+            _rigidBody.transform.rotation = Quaternion.identity;
+            _rigidBody.angularVelocity = 0f;
+            _rigidBody.sharedMaterial.bounciness = 0f;
             _state = State.Walk1;
+        }
+            
         
         if (IsWalking)
             UpdateSpeed();
@@ -74,6 +82,9 @@ public class Schnegge : MonoBehaviour
     {
         _state = State.Jump;
         _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, KJumpSpeed);
+        _rigidBody.sharedMaterial.bounciness = KBounciness;
+        _speedX /= 4;
+        UpdateSpeed();
     }
 
     private void SmoothSpeed()
