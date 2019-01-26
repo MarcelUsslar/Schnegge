@@ -6,5 +6,7 @@ namespace Scripts.Level
     public class LevelPartsConfig : ScriptableObject
     {
         [SerializeField] private LevelPart[] _parts;
+
+        public LevelPart[] Parts => _parts;
     }
 }

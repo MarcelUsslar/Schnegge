@@ -50,5 +50,31 @@ namespace Scripts.Level
 
             return newObject;
         }
+
+        public void Destroy()
+        {
+            // TODO remove correctly
+            Destroy(gameObject);
+        }
+
+        public void SetPositionAsNext(LevelPart previousPart)
+        {
+            if (previousPart == null)
+            {
+                gameObject.transform.position = Vector3.zero;
+            }
+
+            // TODO set correct position depending on previous end point & own start point
+        }
+
+        public void SetPositionAsPrevious(LevelPart nextPart)
+        {
+            if (nextPart == null)
+            {
+                gameObject.transform.position = Vector3.zero;
+            }
+
+            // TODO set correct position depending on next start point & own end point
+        }
     }
 }
