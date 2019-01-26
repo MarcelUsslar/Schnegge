@@ -16,24 +16,26 @@ public class SoundService : MonoBehaviour
     [UsedImplicitly] private void Start()
     {
         _instance = this;
-        Play(_mainMusic, true);
+        //Play(_mainMusic, true);
     }
     
-    public static void PlaySound(Sound sound)
+    public static Action PlaySound(Sound sound, bool loop = false)
     {
         var sounds = _instance._audioClips.Where(tuple => tuple.Sound == sound).ToArray();
         var randomSound = sounds[Random.Range(0, sounds.Length)];
 
-        _instance.Play(randomSound.AudioClip);
+        return _instance.Play(randomSound.AudioClip, loop);
     }
 
-    private void Play(AudioClip audioClip, bool loop = false)
+    private Action Play(AudioClip audioClip, bool loop)
     {
         var audioSource = GetAvailableAudioSource();
 
         audioSource.clip = audioClip;
         audioSource.Play();
         audioSource.loop = loop;
+
+        return () => audioSource.Stop();
     }
 
     private AudioSource GetAvailableAudioSource()

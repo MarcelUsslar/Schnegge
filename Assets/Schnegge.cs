@@ -17,6 +17,7 @@ public class Schnegge : MonoBehaviour
 
     public bool PerfectlyBlockedLastFrame;
 
+    private Action _walkSoundDisposable;
     private State _state;
     private float _speedX = 2f;
     private float _timeSinceBeginningOfJump;
@@ -45,6 +46,7 @@ public class Schnegge : MonoBehaviour
             _rigidBody.angularVelocity = 0f;
             _rigidBody.sharedMaterial.bounciness = 0f;
             _state = State.Walk1;
+            _walkSoundDisposable = SoundService.PlaySound(Sound.Walk, true);
         }
             
         
@@ -80,6 +82,12 @@ public class Schnegge : MonoBehaviour
 
     private void Jump()
     {
+        if (_walkSoundDisposable != null)
+        {
+            _walkSoundDisposable();
+            _walkSoundDisposable = null;
+        }
+
         _state = State.Jump;
         _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, KJumpSpeed);
         _rigidBody.sharedMaterial.bounciness = KBounciness;

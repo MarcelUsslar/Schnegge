@@ -684,7 +684,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75ce863fa47a2a24789c8ae9708ff06b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mainMusic: {fileID: 8300000, guid: a88e18f4bd3832b459dc9c1815cc5656, type: 3}
+  _mainMusic: {fileID: 0}
   _audioClips:
   - AudioClip: {fileID: 8300000, guid: e5e9bbb27b05c8f4a96fe3081085efee, type: 3}
     Sound: 0
@@ -696,6 +696,10 @@ MonoBehaviour:
     Sound: 3
   - AudioClip: {fileID: 8300000, guid: a0c2de7ae109cc249a747c486e83ca5a, type: 3}
     Sound: 0
+  - AudioClip: {fileID: 8300000, guid: 0670b27a114fc2747afcb22ebc312dcd, type: 3}
+    Sound: 4
+  - AudioClip: {fileID: 8300000, guid: 2df050666d737e44586875192ed3d87e, type: 3}
+    Sound: 4
 --- !u!4 &938009533
 Transform:
   m_ObjectHideFlags: 0
