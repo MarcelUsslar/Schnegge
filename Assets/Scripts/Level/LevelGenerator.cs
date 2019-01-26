@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Scripts.Level
 {
     public class LevelGenerator : MonoBehaviour
     {
-        private const int KMaxLevelParts = 10;
-        private const float KUpdateInterval = 5f;
-
         private static LevelGenerator _instance;
 
-        private readonly List<LevelPart> _parts = new List<LevelPart>(KMaxLevelParts);
+        private List<LevelPart> _parts;
         private readonly List<int> _mapGenerationCode = new List<int>();
 
         [SerializeField] private LevelPartsConfig _config;
@@ -23,20 +20,22 @@ namespace Scripts.Level
         
         private void Start()
         {
+            _parts = new List<LevelPart>(_config.MaxLevelParts);
+
             StartCoroutine(GenerateMap());
         }
 
         private IEnumerator GenerateMap()
         {
             LevelPart previousPart = null;
-            for (var i = 0; i < KMaxLevelParts; i++)
+            for (var i = 0; i < _config.MaxLevelParts; i++)
             {
                 previousPart = GeneratePart(previousPart);
             }
 
             while (true)
             {
-                yield return new WaitForSeconds(KUpdateInterval);
+                yield return new WaitForSeconds(_config.UpdateInterval);
 
                 if (SchneggePastPart(_parts[0]))
                 {
@@ -73,34 +72,84 @@ namespace Scripts.Level
 
         private LevelPart GeneratePart(LevelPart previousPart)
         {
-            var randomPart = UnityEngine.Random.Range(0, _config.Parts.Length);
-            var part = Instantiate(_config.Parts[randomPart], Vector3.zero, Quaternion.identity, null);
-            part.name = "Part" + randomPart + " Index" + _currentLevelIndex;
-
+            var part = _currentLevelIndex < _config.TutorialParts.Length ?
+                GenerateTutorialPart() :
+                GenerateRandomPart();
+            
             part.SetPositionAsNext(previousPart);
 
             _parts.Add(part);
-
-            if (_mapGenerationCode.Count <= _currentLevelIndex)
-            {
-                _mapGenerationCode.Add(randomPart);
-            }
 
             _currentLevelIndex++;
 
             return part;
         }
 
+        private LevelPart GenerateRandomPart()
+        {
+            var randomPart = UnityEngine.Random.Range(0, _config.Parts.Length);
+            var part = Instantiate(_config.Parts[randomPart], Vector3.zero, Quaternion.identity, null);
+            SetPartName(part, randomPart, _currentLevelIndex - _config.TutorialParts.Length);
+
+            AddIndexToMap(randomPart);
+
+            return part;
+        }
+
+        private LevelPart GenerateTutorialPart()
+        {
+            var part = Instantiate(_config.TutorialParts[_currentLevelIndex], Vector3.zero, Quaternion.identity, null);
+            SetPartName(part, _currentLevelIndex, _currentLevelIndex, false);
+
+            AddIndexToMap(_currentLevelIndex);
+
+            return part;
+        }
+
+        private void SetPartName(Object part, int partNumber, int index, bool isRandom = true)
+        {
+            part.name = $"{(isRandom ? $"RandomPart" : $"TutorialPart")}_{partNumber}-Index{index}";
+        }
+
+        private void AddIndexToMap(int index)
+        {
+            if (_mapGenerationCode.Count <= _currentLevelIndex)
+            {
+                _mapGenerationCode.Add(index);
+            }
+        }
+
         private LevelPart RegeneratePreviousPart(LevelPart followingPart)
         {
             _currentLevelIndex--;
 
-            var part = Instantiate(_config.Parts[_mapGenerationCode[_currentLevelIndex]], Vector3.zero, Quaternion.identity, null);
-            part.name = "Part" + _mapGenerationCode[_currentLevelIndex] + " Index" + _currentLevelIndex;
+            var part = _currentLevelIndex < _config.TutorialParts.Length ?
+                RegenerateTutorialPart() :
+                RegenerateRandomPart();
 
             part.SetPositionAsPrevious(followingPart);
 
             _parts.Insert(0, part);
+
+            return part;
+        }
+
+        private LevelPart RegenerateRandomPart()
+        {
+            var part = Instantiate(_config.Parts[_mapGenerationCode[_currentLevelIndex]], Vector3.zero, Quaternion.identity, null);
+            SetPartName(part, _mapGenerationCode[_currentLevelIndex], _currentLevelIndex - _config.TutorialParts.Length);
+
+            AddIndexToMap(_mapGenerationCode[_currentLevelIndex]);
+
+            return part;
+        }
+
+        private LevelPart RegenerateTutorialPart()
+        {
+            var part = Instantiate(_config.TutorialParts[_currentLevelIndex], Vector3.zero, Quaternion.identity, null);
+            SetPartName(part, _currentLevelIndex, _currentLevelIndex, false);
+
+            AddIndexToMap(_currentLevelIndex);
 
             return part;
         }
