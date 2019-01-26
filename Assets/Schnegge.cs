@@ -7,6 +7,8 @@ public class Schnegge : MonoBehaviour
     private const float KPerfectBlockSpeedBoost = 2f;
     private const float KMaxSpeedSmooth = 4f;
     private const float KJumpDuration = 0.3f;
+    private const float KWalkTransitionTime = 0.5f;
+    private const float KJumpSpeed = 3f;
 
     [SerializeField] private Rigidbody2D _rigidBody;
     
@@ -17,6 +19,7 @@ public class Schnegge : MonoBehaviour
     private State _state;
     private float _speedX = 2f;
     private float _timeSinceBeginningOfJump;
+    private float _timeSinceLastWalkingTransition;
 
     private void Start()
     {
@@ -40,7 +43,7 @@ public class Schnegge : MonoBehaviour
         if (IsWalking)
             UpdateSpeed();
 
-        if (IsJumping && PerfectlyBlockedLastFrame)
+        if (PerfectlyBlockedLastFrame)
         {
             PerfectlyBlockedLastFrame = false;
             _speedX += KPerfectBlockSpeedBoost;
@@ -70,6 +73,7 @@ public class Schnegge : MonoBehaviour
     private void Jump()
     {
         _state = State.Jump;
+        _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, KJumpSpeed);
     }
 
     private void SmoothSpeed()
@@ -81,6 +85,13 @@ public class Schnegge : MonoBehaviour
 
     private State TransitionWalk()
     {
+        _timeSinceLastWalkingTransition += Time.deltaTime;
+
+        if (_timeSinceLastWalkingTransition <= KWalkTransitionTime)
+            return _state;
+
+        _timeSinceLastWalkingTransition = 0f;
+
         switch (_state)
         {
             case State.Walk1:
