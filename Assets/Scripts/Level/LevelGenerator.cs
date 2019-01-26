@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Scripts.Level
+namespace Level
 {
     public class LevelGenerator : MonoBehaviour
     {

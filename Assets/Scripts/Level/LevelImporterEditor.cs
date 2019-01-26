@@ -1,7 +1,7 @@
 ﻿using UnityEditor;
 using UnityEngine;
 
-namespace Scripts.Level
+namespace Level
 {
     [CustomEditor(typeof(LevelImporter))]
     public class LevelImporterEditor : Editor

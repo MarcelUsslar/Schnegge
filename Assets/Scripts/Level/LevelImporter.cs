@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace Scripts.Level
+namespace Level
 {
     public class LevelImporter : MonoBehaviour
     {
@@ -70,6 +68,7 @@ namespace Scripts.Level
             
             var lineRenderer = edgeColliderObject.AddComponent<LineRenderer>();
             lineRenderer.useWorldSpace = false;
+            lineRenderer.widthMultiplier = 0.1f * _settings.UnitSize;
             lineRenderer.positionCount = points.Count;
             lineRenderer.SetPositions(points.Select(vec => (Vector3) vec).ToArray());
         }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: LevelImportSettings
   m_EditorClassIdentifier: 
   _pixelPerUnit: 2
-  _unitSize: 10
+  _unitSize: 4
   _colorMapping:
   - Color: {r: 0, g: 0, b: 0, a: 1}
     ColorAction: 1

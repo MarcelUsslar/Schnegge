@@ -3,13 +3,13 @@ using UnityEngine;
 
 public class Schnegge : MonoBehaviour
 {
-    private const float KShellGravityScale = 2f;
-    private const float KPerfectBlockSpeedBoost = 2f;
-    private const float KMaxSpeedSmooth = 4f;
-    private const float KJumpDuration = 0.3f;
-    private const float KWalkTransitionTime = 0.5f;
-    private const float KJumpSpeed = 3f;
-    private const float KBounciness = 0.4f;
+    [SerializeField] private float _shellGravityScale = 2f;
+    [SerializeField] private float _perfectBlockSpeedBoost = 2f;
+    [SerializeField] private float _maxSpeedSmooth = 4f;
+    [SerializeField] private float _jumpDuration = 0.3f;
+    [SerializeField] private float _walkTransitionTime = 0.5f;
+    [SerializeField] private float _jumpSpeed = 3f;
+    [SerializeField] private float _bounciness = 0.4f;
 
     [SerializeField] private Rigidbody2D _rigidBody;
     
@@ -56,7 +56,7 @@ public class Schnegge : MonoBehaviour
         if (PerfectlyBlockedLastFrame)
         {
             PerfectlyBlockedLastFrame = false;
-            _speedX += KPerfectBlockSpeedBoost;
+            _speedX += _perfectBlockSpeedBoost;
             UpdateSpeed();
         }
 
@@ -73,7 +73,7 @@ public class Schnegge : MonoBehaviour
     {
         _timeSinceBeginningOfJump += Time.deltaTime;
 
-        if (_timeSinceBeginningOfJump <= KJumpDuration)
+        if (_timeSinceBeginningOfJump <= _jumpDuration)
             return _state;
 
         _timeSinceBeginningOfJump = 0f;
@@ -89,8 +89,8 @@ public class Schnegge : MonoBehaviour
         }
 
         _state = State.Jump;
-        _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, KJumpSpeed);
-        _rigidBody.sharedMaterial.bounciness = KBounciness;
+        _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpSpeed);
+        _rigidBody.sharedMaterial.bounciness = _bounciness;
         _speedX /= 4;
         UpdateSpeed();
         SoundService.PlaySound(Sound.Jump);
@@ -107,7 +107,7 @@ public class Schnegge : MonoBehaviour
     {
         _timeSinceLastWalkingTransition += Time.deltaTime;
 
-        if (_timeSinceLastWalkingTransition <= KWalkTransitionTime)
+        if (_timeSinceLastWalkingTransition <= _walkTransitionTime)
             return _state;
 
         _timeSinceLastWalkingTransition = 0f;
@@ -139,7 +139,7 @@ public class Schnegge : MonoBehaviour
     private void UpdateGravityForce()
     {
         _rigidBody.gravityScale = _state == State.Shell 
-            ? KShellGravityScale 
+            ? _shellGravityScale 
             : 1;
     }
 

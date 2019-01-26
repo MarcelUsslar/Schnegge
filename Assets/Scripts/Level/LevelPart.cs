@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Scripts.Level
+namespace Level
 {
     public class LevelPart : MonoBehaviour
     {

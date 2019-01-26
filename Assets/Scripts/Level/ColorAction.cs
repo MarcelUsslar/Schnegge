@@ -1,4 +1,4 @@
-﻿namespace Scripts.Level
+﻿namespace Level
 {
     public enum ColorAction
     {

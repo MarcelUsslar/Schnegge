@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Scripts.Level
+namespace Level
 {
     [CreateAssetMenu(menuName = "Level/Level Parts Config", fileName = "LevelPartsConfig")]
     public class LevelPartsConfig : ScriptableObject

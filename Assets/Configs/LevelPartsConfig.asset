@@ -14,7 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxLevelParts: 2
   _updateInterval: 1
-  _tutorialParts:
-  - {fileID: 6170034338401189788, guid: 8e5fc320abe3e794481a8d4e422f6a3b, type: 3}
-  _parts:
-  - {fileID: 6170034338401189788, guid: 8e5fc320abe3e794481a8d4e422f6a3b, type: 3}
+  _tutorialParts: []
+  _parts: []

@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace Scripts.Level
+namespace Level
 {
     [CreateAssetMenu(menuName = "Level/Level Import Setting", fileName = "LevelImportSettings")]
     public class LevelImportSettings : ScriptableObject
@@ -10,7 +10,9 @@ namespace Scripts.Level
         [SerializeField] private int _pixelPerUnit;
         [SerializeField] private float _unitSize;
         [SerializeField] private ColorMapping[] _colorMapping;
-        
+
+        public float UnitSize => _unitSize;
+
         public Vector2 GetPosition(int pixelWidth, int pixelHeight)
         {
             return new Vector2(pixelWidth * _unitSize / _pixelPerUnit, pixelHeight * _unitSize / _pixelPerUnit);
