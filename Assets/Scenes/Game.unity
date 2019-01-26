@@ -176,7 +176,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &406771507
 GameObject:
@@ -392,7 +392,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75ce863fa47a2a24789c8ae9708ff06b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _mainMusic: {fileID: 0}
+  _mainMusic: {fileID: 8300000, guid: d891f2bea5fb730438aff90034984fc3, type: 3}
   _audioClips:
   - AudioClip: {fileID: 8300000, guid: e5e9bbb27b05c8f4a96fe3081085efee, type: 3}
     Sound: 0
@@ -476,7 +476,7 @@ PrefabInstance:
     - target: {fileID: 8473540845392198259, guid: 344f6ac5fc497e14c9dcb94d79388aa5,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8473540845392198259, guid: 344f6ac5fc497e14c9dcb94d79388aa5,
         type: 3}
