@@ -85,6 +85,7 @@ public class Schnegge : MonoBehaviour
         _rigidBody.sharedMaterial.bounciness = KBounciness;
         _speedX /= 4;
         UpdateSpeed();
+        SoundService.PlaySound(Sound.Jump);
     }
 
     private void SmoothSpeed()

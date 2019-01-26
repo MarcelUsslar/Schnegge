@@ -3,4 +3,5 @@
     Death,
     Block,
     Hit,
+    Jump,
 }
