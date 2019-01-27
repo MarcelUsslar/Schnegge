@@ -26,7 +26,7 @@ public class ScoreCounter : MonoBehaviour
 
     }
 
-    private void resetScore(){
+    public void resetScore(){
         saveScore();
         score = 0;
     }
@@ -35,6 +35,7 @@ public class ScoreCounter : MonoBehaviour
         if(score > highscore){
             highscore = score;
             textHighscore.text = highscore.ToString();
+            textHighscore.gameObject.SetActive(true);
         }
     }
 }

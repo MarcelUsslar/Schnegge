@@ -21,6 +21,8 @@ public class Schnegge : MonoBehaviour
     private float _timeSinceBeginningOfJump;
     [SerializeField] private bool _isOnGround = true;
 
+    private Vector3 startPos;
+
     private State State
     {
         get { return _schneggeStates.First(state => state.IsActive).State; }
@@ -36,10 +38,14 @@ public class Schnegge : MonoBehaviour
     private void Start()
     {
         State = State.Shell;
+        startPos = transform.position;
     }
     
     private void Update()
     {
+        if (State == State.Dead)
+            return;
+
         if (IsJumping)
             EvaluateJumpTime();
 
@@ -202,6 +208,15 @@ public class Schnegge : MonoBehaviour
     {
         SoundService.PlaySound(Sound.Hit);
         State = State.Dead;
+        Invoke(nameof(ResetGame),3f);
+    }
+
+    private void ResetGame(){
+        Fader.FadeOut();
+        FindObjectOfType<ScoreCounter>().resetScore();
+        transform.position = startPos;
+        Level.LevelGenerator.Instance.ResetMap();
+        State = State.Shell;
     }
 
     private void PerfectBlock(Danger danger)
