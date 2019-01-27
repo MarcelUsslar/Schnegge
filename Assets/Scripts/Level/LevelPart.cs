@@ -54,8 +54,10 @@ namespace Level
 
         private void DrawCircle(Transform targetObject, Color circleColor, float size)
         {
+#if UNITY_EDITOR
             Handles.color = circleColor;
-            Handles.DrawWireDisc(targetObject.position, Vector3.forward, size);
+            Handles.DrawWireDisc(targetObject.position, Vector3.forward, size); 
+#endif
         }
 
         public void Reset()
