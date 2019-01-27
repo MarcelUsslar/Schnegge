@@ -27,6 +27,7 @@ public class ScoreCounter : MonoBehaviour
     }
 
     private void resetScore(){
+        saveScore();
         score = 0;
     }
 
