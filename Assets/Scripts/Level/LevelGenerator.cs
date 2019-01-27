@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 
 namespace Level
 {
@@ -9,15 +10,39 @@ namespace Level
     {
         private static LevelGenerator _instance;
 
-        private List<LevelPart> _parts;
-        private readonly List<int> _mapGenerationCode = new List<int>();
-
         [SerializeField] private LevelPartsConfig _config;
+
+        private List<LevelPart> _parts;
+        private LevelPart _previousPart;
+        private readonly List<int> _mapGenerationCode = new List<int>();
 
         private Schnegge _schnegge;
 
         private int _currentLevelIndex;
-        
+
+        public void ResetMap()
+        {
+            StopCoroutine(GenerateMap());
+
+            _currentLevelIndex = 0;
+            foreach (var part in _parts)
+            {
+                part.Destroy();
+            }
+            _parts.Clear();
+            _schnegge.transform.position = Vector3.zero;
+
+            Start();
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                ResetMap();
+            }
+        }
+
         private void Start()
         {
             _parts = new List<LevelPart>(_config.MaxLevelParts);
@@ -27,27 +52,28 @@ namespace Level
 
         private IEnumerator GenerateMap()
         {
-            LevelPart previousPart = null;
+            _previousPart = null;
             for (var i = 0; i < _config.MaxLevelParts; i++)
             {
-                previousPart = GeneratePart(previousPart);
+                _previousPart = GeneratePart(_previousPart);
             }
 
             while (true)
             {
-                yield return new WaitForSeconds(_config.UpdateInterval);
-
-                if (SchneggePastPart(_parts[0]))
+                if (SchneggePastPart(0))
                 {
-                    previousPart = GeneratePart(previousPart);
+                    _previousPart = GeneratePart(_previousPart);
                     RemovePart(0);
                 }
 
-                if (SchneggeBeforePart(_parts[0]))
+                if (SchneggeBeforePart(0))
                 {
-                    previousPart = RegeneratePreviousPart(_parts[0]);
+                    RegeneratePreviousPart(_parts[0]);
+                    _previousPart = _parts[_parts.Count - 2];
                     RemovePart(_parts.Count - 1);
                 }
+
+                yield return new WaitForSeconds(_config.UpdateInterval);
             }
         }
 
@@ -58,16 +84,20 @@ namespace Level
             removedPart.Destroy();
         }
 
-        private bool SchneggePastPart(LevelPart checkedPart)
+        private bool SchneggePastPart(int checkedPartIndex)
         {
-            // TODO check if schnegge is past last part
-            return false;
+            var schneggenPosition = _schnegge.transform.position;
+            var nextPart = _parts[checkedPartIndex + 1];
+
+            return schneggenPosition.x > nextPart.LevelEndPoint.position.x;
         }
 
-        private bool SchneggeBeforePart(LevelPart checkedPart)
+        private bool SchneggeBeforePart(int checkedPartIndex)
         {
-            // TODO check if schnegge is before previous part
-            return false;
+            var schneggenPosition = _schnegge.transform.position;
+            var part = _parts[checkedPartIndex];
+
+            return RegeneratedPartIndex > _config.TutorialParts.Length && schneggenPosition.x < part.LevelEndPoint.position.x;
         }
 
         private LevelPart GeneratePart(LevelPart previousPart)
@@ -76,22 +106,12 @@ namespace Level
                 GenerateTutorialPart() :
                 GenerateRandomPart();
             
+            Debug.LogWarning($"Set position for {part.name} with previous: {previousPart}");
             part.SetPositionAsNext(previousPart);
 
             _parts.Add(part);
 
             _currentLevelIndex++;
-
-            return part;
-        }
-
-        private LevelPart GenerateRandomPart()
-        {
-            var randomPart = UnityEngine.Random.Range(0, _config.Parts.Length);
-            var part = Instantiate(_config.Parts[randomPart], Vector3.zero, Quaternion.identity, null);
-            SetPartName(part, randomPart, _currentLevelIndex - _config.TutorialParts.Length);
-
-            AddIndexToMap(randomPart);
 
             return part;
         }
@@ -102,6 +122,20 @@ namespace Level
             SetPartName(part, _currentLevelIndex, _currentLevelIndex, false);
 
             AddIndexToMap(_currentLevelIndex);
+
+            return part;
+        }
+
+        private LevelPart GenerateRandomPart()
+        {
+            var partIndex = _currentLevelIndex >= _mapGenerationCode.Count
+                ? Random.Range(0, _config.Parts.Length)
+                : _mapGenerationCode[_currentLevelIndex];
+
+            var part = Instantiate(_config.Parts[partIndex], Vector3.zero, Quaternion.identity, null);
+            SetPartName(part, partIndex, _currentLevelIndex - _config.TutorialParts.Length);
+
+            AddIndexToMap(partIndex);
 
             return part;
         }
@@ -119,38 +153,34 @@ namespace Level
             }
         }
 
-        private LevelPart RegeneratePreviousPart(LevelPart followingPart)
+        private void RegeneratePreviousPart(LevelPart followingPart)
         {
             _currentLevelIndex--;
 
-            var part = _currentLevelIndex < _config.TutorialParts.Length ?
+            var part = RegeneratedPartIndex < _config.TutorialParts.Length ?
                 RegenerateTutorialPart() :
                 RegenerateRandomPart();
 
             part.SetPositionAsPrevious(followingPart);
 
             _parts.Insert(0, part);
-
-            return part;
         }
+
+        private int RegeneratedPartIndex => _currentLevelIndex - _config.MaxLevelParts;
 
         private LevelPart RegenerateRandomPart()
         {
-            var part = Instantiate(_config.Parts[_mapGenerationCode[_currentLevelIndex]], Vector3.zero, Quaternion.identity, null);
-            SetPartName(part, _mapGenerationCode[_currentLevelIndex], _currentLevelIndex - _config.TutorialParts.Length);
-
-            AddIndexToMap(_mapGenerationCode[_currentLevelIndex]);
-
+            var part = Instantiate(_config.Parts[_mapGenerationCode[RegeneratedPartIndex]], Vector3.zero, Quaternion.identity, null);
+            SetPartName(part, _mapGenerationCode[RegeneratedPartIndex], RegeneratedPartIndex - _config.TutorialParts.Length);
+            
             return part;
         }
 
         private LevelPart RegenerateTutorialPart()
         {
-            var part = Instantiate(_config.TutorialParts[_currentLevelIndex], Vector3.zero, Quaternion.identity, null);
-            SetPartName(part, _currentLevelIndex, _currentLevelIndex, false);
-
-            AddIndexToMap(_currentLevelIndex);
-
+            var part = Instantiate(_config.TutorialParts[RegeneratedPartIndex], Vector3.zero, Quaternion.identity, null);
+            SetPartName(part, RegeneratedPartIndex, RegeneratedPartIndex, false);
+            
             return part;
         }
 
