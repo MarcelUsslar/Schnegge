@@ -30,7 +30,6 @@ namespace Level
                 part.Destroy();
             }
             _parts.Clear();
-            _schnegge.transform.position = Vector3.zero;
 
             Start();
         }
