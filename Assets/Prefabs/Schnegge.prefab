@@ -530,8 +530,8 @@ MonoBehaviour:
   _maxSpeedSmooth: 4
   _jumpDuration: 0.3
   _jumpSpeed: 3
-  _speedX: 2
-  _isOnGround: 1
+  _defaultSpeed: 10
+  _defaultGravity: 5
 --- !u!50 &5215363384865592126
 Rigidbody2D:
   serializedVersion: 4
