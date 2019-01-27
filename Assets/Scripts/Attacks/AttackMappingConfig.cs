@@ -28,7 +28,7 @@ namespace Attacks
 
         public Danger GetAttackPrefab(Color color)
         {
-            return _attackMapping.FirstOrDefault(mapping => mapping.Color.Equals(color)).DangerPrefab;
+            return _attackMapping.FirstOrDefault(mapping => mapping.Color.Equals(color))?.DangerPrefab;
         }
     }
 }

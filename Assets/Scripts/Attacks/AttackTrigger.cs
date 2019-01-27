@@ -29,11 +29,19 @@ namespace Attacks
 
         private void Start()
         {
-            _danger = Instantiate(_attackMappingConfig.GetAttackPrefab(_key), gameObject.transform, false);
+            var prefab = _attackMappingConfig.GetAttackPrefab(_key);
+
+            if (prefab == null)
+                return;
+
+            _danger = Instantiate(prefab, gameObject.transform, false);
         }
 
         private void OnTriggerEnter2D(Collider2D other)
         {
+            if (_danger == null)
+                return;
+                
             _danger.MakeDanger();
         }
     }

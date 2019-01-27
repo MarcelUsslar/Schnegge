@@ -54,8 +54,6 @@ public class Schnegge : MonoBehaviour
         if (IsWalking)
             VelocityX = _speedX;
         
-        Debug.Log(VelocityX);
-
         SmoothSpeed();
 
         if (IsWalking)
@@ -109,7 +107,6 @@ public class Schnegge : MonoBehaviour
 
     private void OnLanding()
     {
-        Debug.LogWarning("OnLanding");
         State = State.Walk;
         WalkSoundDisposable = SoundService.PlaySound(Sound.Walk, true);
         VelocityX = _defaultSpeed;
@@ -171,8 +168,7 @@ public class Schnegge : MonoBehaviour
     {
         OnContact(other.gameObject);
     }
-
-
+    
     private void OnContact(GameObject gameObject)
     {
         if (IsGliding)
