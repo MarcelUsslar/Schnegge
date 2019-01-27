@@ -2,6 +2,7 @@
 using System.Linq;
 using Attacks;
 using UnityEngine;
+using TileMapGeneration;
 
 namespace Level
 {
@@ -55,19 +56,25 @@ namespace Level
 
         private void GenerateCollider()
         {
-            GenerateEdgeCollider(_levelPoints, "Level");
+            GenerateEdgeCollider(_levelPoints, "Level", true);
             foreach (var key in _flyingIslandMapping.Keys)
             {
-                GenerateEdgeCollider(_flyingIslandMapping[key], key.ToString());
+                GenerateEdgeCollider(_flyingIslandMapping[key], key.ToString(), false);
             }
         }
 
-        private void GenerateEdgeCollider(List<Vector2> points, string objectName)
+        private void GenerateEdgeCollider(List<Vector2> points, string objectName, bool generateTileMap)
         {
             var edgeColliderObject = CreateChildObject(objectName, _generatedLevel.transform);
 
             var edgeCollider = edgeColliderObject.AddComponent<EdgeCollider2D>();
             edgeCollider.points = points.ToArray();
+
+            if (generateTileMap)
+            {
+                var tileMapGenerator = edgeColliderObject.AddComponent<TileMapGenerator>();
+                tileMapGenerator.Setup(points, _settings); 
+            }
 
             var lineRenderer = edgeColliderObject.AddComponent<LineRenderer>();
             lineRenderer.useWorldSpace = false;
