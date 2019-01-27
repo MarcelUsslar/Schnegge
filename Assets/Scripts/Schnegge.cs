@@ -15,11 +15,13 @@ public class Schnegge : MonoBehaviour
     [SerializeField] private float _maxSpeedSmooth = 4f;
     [SerializeField] private float _jumpDuration = 0.3f;
     [SerializeField] private float _jumpSpeed = 3f;
+    [SerializeField] private float _defaultSpeed;
+    [SerializeField] private float _defaultGravity;
 
     private Action _walkSoundDisposable;
-    [SerializeField] private float _speedX = 2f;
+    private float _speedX;
     private float _timeSinceBeginningOfJump;
-    [SerializeField] private bool _isOnGround = true;
+    private bool _isOnGround = true;
 
     private Vector3 startPos;
 
@@ -58,8 +60,6 @@ public class Schnegge : MonoBehaviour
         if (IsWalking)
             VelocityX = _speedX;
         
-        Debug.Log(VelocityX);
-
         SmoothSpeed();
 
         if (IsWalking)
@@ -93,7 +93,7 @@ public class Schnegge : MonoBehaviour
         State = State.Jump;
 
         _rigidBody.sharedMaterial = _shellMaterial;
-        _rigidBody.gravityScale = 1f;
+        _rigidBody.gravityScale = _defaultGravity;
     }
 
     private void TryWalking()
@@ -113,19 +113,16 @@ public class Schnegge : MonoBehaviour
 
     private void OnLanding()
     {
-        Debug.LogWarning("OnLanding");
         State = State.Walk;
         WalkSoundDisposable = SoundService.PlaySound(Sound.Walk, true);
-        VelocityX = 2f;
+        VelocityX = _defaultSpeed;
     }
     
     private void Glide()
     {
         _rigidBody.gravityScale = _glideGravityScale;
         State = State.Glide;
-
-        VelocityX = VelocityX;
-
+        
         ResetShellPhysics();
     }
 
@@ -195,7 +192,7 @@ public class Schnegge : MonoBehaviour
         }
         else
         {
-            _rigidBody.gravityScale = 1f;
+            _rigidBody.gravityScale = _defaultGravity;
         }
     }
 
