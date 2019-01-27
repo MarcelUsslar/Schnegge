@@ -525,12 +525,12 @@ MonoBehaviour:
   - {fileID: 570048345125210122}
   _shellMaterial: {fileID: 6200000, guid: 41ee0954c9fdfa74e88c4f37eb7fd21e, type: 2}
   _walkMaterial: {fileID: 6200000, guid: 31346ba2118215842a02e1103af11993, type: 2}
-  _glideGravityScale: 0.2
-  _perfectBlockSpeedBoost: 2
+  _glideGravityScale: 0.5
+  _perfectBlockSpeedBoost: 6
   _maxSpeedSmooth: 4
   _jumpDuration: 0.3
   _jumpSpeed: 3
-  _defaultSpeed: 10
+  _defaultSpeed: 5
   _defaultGravity: 5
 --- !u!50 &5215363384865592126
 Rigidbody2D:
