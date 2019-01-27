@@ -1,9 +1,8 @@
-﻿
-public enum State
+﻿public enum State
 {
     Shell,
-    Dead,
-    Walk1,
-    Walk2,
+    Walk,
     Jump,
+    Glide,
+    Dead,
 }
