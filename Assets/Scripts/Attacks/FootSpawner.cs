@@ -20,10 +20,13 @@ public class FootSpawner : MonoBehaviour
     {
         transform.position = new Vector3(_schnegge.transform.position.x + _offsetX, _schnegge.transform.position.y + _offsetY, 0f);
 
-        if (Random.Range(0.0f, _startingRarity / ScoreCounter.Instance.Score * ScoreCounter.Instance.ScoreCountingSpeed) <
-            (_startingRarity / ScoreCounter.Instance.Score * ScoreCounter.Instance.ScoreCountingSpeed < 36 ?
-                _startingRarity / ScoreCounter.Instance.Score * ScoreCounter.Instance.ScoreCountingSpeed / 180.0f :
+        if (Random.Range(0.0f, _startingRarity * ScoreNumber) <
+            (_startingRarity * ScoreNumber < 36 ?
+                _startingRarity * ScoreNumber / 180.0f :
                 0.2f))
             Instantiate(_footPrefab, transform.position, Quaternion.identity);
     }
+
+    private float ScoreNumber => ScoreCounter.Instance.ScoreCountingSpeed /
+                                 (ScoreCounter.Instance.Score > 0 ? ScoreCounter.Instance.Score : 1);
 }
