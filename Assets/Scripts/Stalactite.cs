@@ -9,7 +9,7 @@ public class Stalactite : Danger
 
     private bool _wasReleased;
 
-    public void Release()
+    protected override void OnDanger()
     {
         if (_wasReleased)
             return;
@@ -18,12 +18,6 @@ public class Stalactite : Danger
 
         _animator.enabled = true;
         Invoke(nameof(DropStalactite), 1f);
-    }
-
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Space))
-            Release();
     }
 
     private void DropStalactite()

@@ -92,7 +92,7 @@ namespace Level
                 {
                     var triggerObject = CreateChildObject($"Trigger{i}", attackTriggerParent.transform);
                     var attackTrigger = triggerObject.AddComponent<AttackTrigger>();
-                    attackTrigger.Setup(_settings.UnitSize);
+                    attackTrigger.Setup(key, _settings.UnitSize);
                     attackTrigger.transform.position = _attackTriggerMapping[key][i];
                 }
             }

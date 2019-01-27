@@ -15,7 +15,13 @@ MonoBehaviour:
   _attackMapping:
   - Color: {r: 1, g: 0, b: 0, a: 1}
     AttackType: 1
+    DangerPrefab: {fileID: 1757389741840082341, guid: f886d64f7576b914aac5783e53d28b6e,
+      type: 3}
   - Color: {r: 1, g: 1, b: 0, a: 1}
     AttackType: 2
+    DangerPrefab: {fileID: 1757389741840082341, guid: f886d64f7576b914aac5783e53d28b6e,
+      type: 3}
   - Color: {r: 1, g: 0, b: 1, a: 1}
     AttackType: 3
+    DangerPrefab: {fileID: 1757389741840082341, guid: f886d64f7576b914aac5783e53d28b6e,
+      type: 3}
