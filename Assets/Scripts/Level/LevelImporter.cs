@@ -66,13 +66,10 @@ namespace Level
         private void GenerateEdgeCollider(List<Vector2> points, string objectName, bool generateTileMap)
         {
             var edgeColliderObject = CreateChildObject(objectName, _generatedLevel.transform);
-
-            var edgeCollider = edgeColliderObject.AddComponent<EdgeCollider2D>();
-            edgeCollider.points = points.ToArray();
-
+            
             if (generateTileMap)
             {
-                var tileMapGenerator = edgeColliderObject.AddComponent<TileMapGenerator>();
+                var tileMapGenerator = edgeColliderObject.AddComponent<TileVisualizer>();
                 tileMapGenerator.Setup(points, _settings); 
             }
 
