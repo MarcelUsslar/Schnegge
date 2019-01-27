@@ -8,7 +8,7 @@ namespace Level
 {
     public class LevelGenerator : MonoBehaviour
     {
-        private static LevelGenerator _instance;
+        public static LevelGenerator Instance;
 
         [SerializeField] private LevelPartsConfig _config;
 
@@ -186,13 +186,13 @@ namespace Level
 
         private void Awake()
         {
-            if (_instance != null)
+            if (Instance != null)
             {
                 Destroy(this);
                 return;
             }
 
-            _instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject);
 
             _schnegge = FindObjectOfType<Schnegge>();
