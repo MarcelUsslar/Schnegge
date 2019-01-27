@@ -15,13 +15,11 @@ public class Schnegge : MonoBehaviour
     [SerializeField] private float _maxSpeedSmooth = 4f;
     [SerializeField] private float _jumpDuration = 0.3f;
     [SerializeField] private float _jumpSpeed = 3f;
-    [SerializeField] private float _defaultSpeed = 5f;
-    [SerializeField] private float _defaultGravity = 1f;
 
     private Action _walkSoundDisposable;
-    private float _speedX;
+    [SerializeField] private float _speedX = 2f;
     private float _timeSinceBeginningOfJump;
-    private bool _isOnGround = true;
+    [SerializeField] private bool _isOnGround = true;
 
     private State State
     {
@@ -54,6 +52,8 @@ public class Schnegge : MonoBehaviour
         if (IsWalking)
             VelocityX = _speedX;
         
+        Debug.Log(VelocityX);
+
         SmoothSpeed();
 
         if (IsWalking)
@@ -87,7 +87,7 @@ public class Schnegge : MonoBehaviour
         State = State.Jump;
 
         _rigidBody.sharedMaterial = _shellMaterial;
-        _rigidBody.gravityScale = _defaultGravity;
+        _rigidBody.gravityScale = 1f;
     }
 
     private void TryWalking()
@@ -107,9 +107,10 @@ public class Schnegge : MonoBehaviour
 
     private void OnLanding()
     {
+        Debug.LogWarning("OnLanding");
         State = State.Walk;
         WalkSoundDisposable = SoundService.PlaySound(Sound.Walk, true);
-        VelocityX = _defaultSpeed;
+        VelocityX = 2f;
     }
     
     private void Glide()
@@ -162,27 +163,16 @@ public class Schnegge : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
-        OnContact(other.gameObject);
-    }
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        OnContact(other.gameObject);
-    }
-    
-    private void OnContact(GameObject gameObject)
-    {
         if (IsGliding)
             OnLanding();
 
         _isOnGround = !IsJumping;
 
-        var danger = gameObject.GetComponent<Danger>();
-
-        if (danger == null)
-            danger = gameObject.GetComponentInParent<Danger>();
-
+        var danger = other.gameObject.GetComponent<Danger>();
         if (danger != null)
         {
+            SoundService.PlaySound(Sound.Danger);
+
             switch (State)
             {
                 case State.Shell:
@@ -199,7 +189,7 @@ public class Schnegge : MonoBehaviour
         }
         else
         {
-            _rigidBody.gravityScale = _defaultGravity;
+            _rigidBody.gravityScale = 1f;
         }
     }
 
