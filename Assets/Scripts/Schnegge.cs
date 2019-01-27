@@ -165,15 +165,25 @@ public class Schnegge : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        OnContact(other.gameObject);
+    }
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        OnContact(other.gameObject);
+    }
+
+
+    private void OnContact(GameObject gameObject)
+    {
         if (IsGliding)
             OnLanding();
 
         _isOnGround = !IsJumping;
 
-        var danger = other.gameObject.GetComponent<Danger>();
-        
+        var danger = gameObject.GetComponent<Danger>();
+
         if (danger == null)
-            danger = other.gameObject.GetComponentInParent<Danger>();
+            danger = gameObject.GetComponentInParent<Danger>();
 
         if (danger != null)
         {
