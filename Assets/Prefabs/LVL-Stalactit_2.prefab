@@ -10,7 +10,7 @@ PrefabInstance:
     - target: {fileID: 4107761681023266520, guid: fd588ec0ab08bba45bf984fd90fde86c,
         type: 3}
       propertyPath: m_Name
-      value: LVL-Stalactit_1
+      value: LVL-Stalactit_2
       objectReference: {fileID: 0}
     - target: {fileID: 1029572160626654621, guid: fd588ec0ab08bba45bf984fd90fde86c,
         type: 3}
@@ -67,6 +67,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1291298179261263955, guid: fd588ec0ab08bba45bf984fd90fde86c,
+        type: 3}
+      propertyPath: _levelStartPoint
+      value: 
+      objectReference: {fileID: 4425910235989350455}
+    - target: {fileID: 1291298179261263955, guid: fd588ec0ab08bba45bf984fd90fde86c,
+        type: 3}
+      propertyPath: _levelEndPoint
+      value: 
+      objectReference: {fileID: 4425910235989350421}
     - target: {fileID: 6055351439939028356, guid: fd588ec0ab08bba45bf984fd90fde86c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -982,6 +992,11 @@ PrefabInstance:
       propertyPath: m_Points.Array.data[84].y
       value: 11.96399
       objectReference: {fileID: 0}
+    - target: {fileID: 5954749711674050084, guid: fd588ec0ab08bba45bf984fd90fde86c,
+        type: 3}
+      propertyPath: m_EdgeRadius
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 3914626253135456468, guid: fd588ec0ab08bba45bf984fd90fde86c,
         type: 3}
       propertyPath: m_LocalAABB.m_Center.x
@@ -1011,6 +1026,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalAABB.m_Extent.z
       value: 0.001
+      objectReference: {fileID: 0}
+    - target: {fileID: 3914626253135456468, guid: fd588ec0ab08bba45bf984fd90fde86c,
+        type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6938113331683887963, guid: fd588ec0ab08bba45bf984fd90fde86c,
         type: 3}
@@ -6888,25 +6908,15 @@ PrefabInstance:
       propertyPath: m_Size.y
       value: 20
       objectReference: {fileID: 0}
-    - target: {fileID: 1291298179261263955, guid: fd588ec0ab08bba45bf984fd90fde86c,
-        type: 3}
-      propertyPath: _levelStartPoint
-      value: 
-      objectReference: {fileID: 5876443538314180618}
-    - target: {fileID: 1291298179261263955, guid: fd588ec0ab08bba45bf984fd90fde86c,
-        type: 3}
-      propertyPath: _levelEndPoint
-      value: 
-      objectReference: {fileID: 3107164639375991490}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fd588ec0ab08bba45bf984fd90fde86c, type: 3}
---- !u!1 &5876443538314180618 stripped
+--- !u!1 &4425910235989350455 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7847152552200249409, guid: fd588ec0ab08bba45bf984fd90fde86c,
     type: 3}
   m_PrefabInstance: {fileID: 4425910235989350475}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3107164639375991490 stripped
+--- !u!1 &4425910235989350421 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1618235023373122185, guid: fd588ec0ab08bba45bf984fd90fde86c,
     type: 3}
