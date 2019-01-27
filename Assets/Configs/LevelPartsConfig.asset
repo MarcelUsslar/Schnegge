@@ -16,9 +16,6 @@ MonoBehaviour:
   _updateInterval: 1
   _tutorialParts:
   - {fileID: 1223539695070174420, guid: 728df8992da8b854b8d3d1900e3d7ce1, type: 3}
-  - {fileID: 888836360307844122, guid: 9d16ad7699ade5c4aa16efc747f718c8, type: 3}
-  - {fileID: 4895478359793510253, guid: dc6a37e3272b5504281b7bf493c90729, type: 3}
-  _parts:
-  - {fileID: 1223539695070174420, guid: 728df8992da8b854b8d3d1900e3d7ce1, type: 3}
-  - {fileID: 888836360307844122, guid: 9d16ad7699ade5c4aa16efc747f718c8, type: 3}
-  - {fileID: 4895478359793510253, guid: dc6a37e3272b5504281b7bf493c90729, type: 3}
+  - {fileID: 7080983283889871247, guid: 9d16ad7699ade5c4aa16efc747f718c8, type: 3}
+  - {fileID: 1132145560235578375, guid: dc6a37e3272b5504281b7bf493c90729, type: 3}
+  _parts: []

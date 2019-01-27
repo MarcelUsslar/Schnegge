@@ -54,14 +54,10 @@ namespace TileMapGeneration
 
             var spline = shapeController.spline;
             spline.Clear();
-
-            _colliderPoints.Add(new Vector3(_colliderPoints[_colliderPoints.Count - 1].x, 0.0f));
-            _colliderPoints.Add(new Vector3(_colliderPoints[0].x, 0.0f));
-
+            
             for (var i = 0; i < _colliderPoints.Count; i++)
             {
-                InsertPoint(spline, i, _colliderPoints[i],
-                    i < _colliderPoints.Count - 2 ? ShapeTangentMode.Continuous : ShapeTangentMode.Broken);
+                InsertPoint(spline, i, _colliderPoints[i], ShapeTangentMode.Continuous);
             }
             
             var splinePointCount = spline.GetPointCount();
@@ -144,9 +140,13 @@ namespace TileMapGeneration
                     break;
                 }
 
-                for (var h = grassHeight; h < _height && h <= grassHeight + _settings.MaxGroundTiles; h++)
+                if (grassHeight >= 0)
                 {
-                    _terrainMap[w, h] = TileType.Earth;
+                    for (var height = grassHeight; height < _height && height <= grassHeight + _settings.MaxGroundTiles; height++)
+                    {
+                        Debug.LogWarning(height + " " + _height);
+                        _terrainMap[w, height] = TileType.Earth;
+                    }
                 }
             }
         }
