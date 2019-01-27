@@ -613,7 +613,7 @@ MonoBehaviour:
   _audioClips:
   - AudioClip: {fileID: 8300000, guid: e5e9bbb27b05c8f4a96fe3081085efee, type: 3}
     Sound: 0
-  - AudioClip: {fileID: 8300000, guid: 2cffe449ed736c04f83216e9e34f5dc4, type: 3}
+  - AudioClip: {fileID: 8300000, guid: 5e8a2c095df5f76419ff4ef08376fee8, type: 3}
     Sound: 1
   - AudioClip: {fileID: 8300000, guid: 2cffe449ed736c04f83216e9e34f5dc4, type: 3}
     Sound: 2
