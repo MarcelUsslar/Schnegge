@@ -168,7 +168,7 @@ public class Schnegge : MonoBehaviour
 
         _isOnGround = !IsJumping;
 
-        var danger = other.gameObject.GetComponentInParent<Danger>();
+        var danger = other.gameObject.GetComponent<Danger>();
         if (danger != null)
         {
             SoundService.PlaySound(Sound.Danger);

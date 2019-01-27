@@ -16,7 +16,7 @@ public class Stalactite : Danger
 
         _wasReleased = true;
 
-        _animator.SetTrigger("Wiggle");
+        _animator.enabled = true;
         Invoke(nameof(DropStalactite), 1f);
     }
 
@@ -29,5 +29,10 @@ public class Stalactite : Danger
     private void DropStalactite()
     {
         _stalactiteBot.gravityScale = _gravityScale;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        Destroy(gameObject);
     }
 }
