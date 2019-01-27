@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pixelPerUnit: 10
   _unitSize: 4
+  _maxGroundTiles: 10
   _colorMapping:
   - Color: {r: 0, g: 0, b: 0, a: 1}
     ColorAction: 1
