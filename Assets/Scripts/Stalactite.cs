@@ -7,7 +7,13 @@ public class Stalactite : Danger
     [Space(10)]
     [SerializeField] private float _gravityScale;
 
+    private Vector3 _startingPos;
     private bool _wasReleased;
+
+    private void Start()
+    {
+        _startingPos = _stalactiteBot.transform.position;
+    }
 
     protected override void OnDanger()
     {
@@ -25,8 +31,14 @@ public class Stalactite : Danger
         _stalactiteBot.gravityScale = _gravityScale;
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    public void ResetBot()
     {
-        Destroy(gameObject);
+        _wasReleased = false;
+        _animator.enabled = false;
+        _stalactiteBot.gravityScale = 0;
+        _stalactiteBot.velocity = Vector2.zero;
+        _stalactiteBot.transform.position = _startingPos;
+        _stalactiteBot.angularVelocity = 0f;
+        _stalactiteBot.transform.rotation = Quaternion.identity;
     }
 }
