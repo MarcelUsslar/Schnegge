@@ -530,7 +530,7 @@ MonoBehaviour:
   _maxSpeedSmooth: 4
   _jumpDuration: 0.3
   _jumpSpeed: 3
-  _defaultSpeed: 5
+  _defaultSpeed: 4
   _defaultGravity: 5
 --- !u!50 &5215363384865592126
 Rigidbody2D:
