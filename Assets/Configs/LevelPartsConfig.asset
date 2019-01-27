@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 027bca19f9394fa4ba4975b6c9dd81e8, type: 3}
   m_Name: LevelPartsConfig
   m_EditorClassIdentifier: 
-  _maxLevelParts: 5
+  _maxLevelParts: 20
   _updateInterval: 1
   _tutorialParts:
   - {fileID: 1223539695070174420, guid: 728df8992da8b854b8d3d1900e3d7ce1, type: 3}
   - {fileID: 7080983283889871247, guid: 9d16ad7699ade5c4aa16efc747f718c8, type: 3}
   - {fileID: 1132145560235578375, guid: dc6a37e3272b5504281b7bf493c90729, type: 3}
-  _parts: []
+  _parts:
+  - {fileID: 8302977154001380933, guid: d8ee49401ddd21f47982aba9f75d7d9a, type: 3}
