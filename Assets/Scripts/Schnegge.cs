@@ -15,11 +15,13 @@ public class Schnegge : MonoBehaviour
     [SerializeField] private float _maxSpeedSmooth = 4f;
     [SerializeField] private float _jumpDuration = 0.3f;
     [SerializeField] private float _jumpSpeed = 3f;
-    
+    [SerializeField] private float _defaultSpeed = 2f;
+    [SerializeField] private float _defaultGravity = 1f;
+
     private Action _walkSoundDisposable;
-    [SerializeField] private float _speedX = 2f;
+    private float _speedX;
     private float _timeSinceBeginningOfJump;
-    [SerializeField] private bool _isOnGround = true;
+    private bool _isOnGround = true;
 
     private State State
     {
@@ -87,7 +89,7 @@ public class Schnegge : MonoBehaviour
         State = State.Jump;
 
         _rigidBody.sharedMaterial = _shellMaterial;
-        _rigidBody.gravityScale = 1f;
+        _rigidBody.gravityScale = _defaultGravity;
     }
 
     private void TryWalking()
@@ -110,7 +112,7 @@ public class Schnegge : MonoBehaviour
         Debug.LogWarning("OnLanding");
         State = State.Walk;
         WalkSoundDisposable = SoundService.PlaySound(Sound.Walk, true);
-        VelocityX = 2f;
+        VelocityX = _defaultSpeed;
     }
     
     private void Glide()
@@ -193,7 +195,7 @@ public class Schnegge : MonoBehaviour
         }
         else
         {
-            _rigidBody.gravityScale = 1f;
+            _rigidBody.gravityScale = _defaultGravity;
         }
     }
 
