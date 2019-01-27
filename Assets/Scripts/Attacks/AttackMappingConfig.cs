@@ -12,6 +12,7 @@ namespace Attacks
         {
             public Color Color;
             public AttackType AttackType;
+            public Danger DangerPrefab;
         }
 
         [SerializeField] private AttackTypeMapping[] _attackMapping;
@@ -23,6 +24,11 @@ namespace Attacks
                 return AttackType.None;
 
             return foundMapping.AttackType;
+        }
+
+        public Danger GetAttackPrefab(Color color)
+        {
+            return _attackMapping.FirstOrDefault(mapping => mapping.Color.Equals(color))?.DangerPrefab;
         }
     }
 }

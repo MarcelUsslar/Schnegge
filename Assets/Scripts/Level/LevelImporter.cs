@@ -66,13 +66,10 @@ namespace Level
         private void GenerateEdgeCollider(List<Vector2> points, string objectName, bool generateTileMap)
         {
             var edgeColliderObject = CreateChildObject(objectName, _generatedLevel.transform);
-
-            var edgeCollider = edgeColliderObject.AddComponent<EdgeCollider2D>();
-            edgeCollider.points = points.ToArray();
-
+            
             if (generateTileMap)
             {
-                var tileMapGenerator = edgeColliderObject.AddComponent<TileMapGenerator>();
+                var tileMapGenerator = edgeColliderObject.AddComponent<TileVisualizer>();
                 tileMapGenerator.Setup(points, _settings); 
             }
 
@@ -92,7 +89,7 @@ namespace Level
                 {
                     var triggerObject = CreateChildObject($"Trigger{i}", attackTriggerParent.transform);
                     var attackTrigger = triggerObject.AddComponent<AttackTrigger>();
-                    attackTrigger.Setup(_settings.UnitSize);
+                    attackTrigger.Setup(key, _settings.UnitSize);
                     attackTrigger.transform.position = _attackTriggerMapping[key][i];
                 }
             }

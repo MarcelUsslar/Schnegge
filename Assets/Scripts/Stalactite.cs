@@ -7,9 +7,15 @@ public class Stalactite : Danger
     [Space(10)]
     [SerializeField] private float _gravityScale;
 
+    private Vector3 _startingPos;
     private bool _wasReleased;
 
-    public void Release()
+    private void Start()
+    {
+        _startingPos = _stalactiteBot.transform.position;
+    }
+
+    protected override void OnDanger()
     {
         if (_wasReleased)
             return;
@@ -20,19 +26,19 @@ public class Stalactite : Danger
         Invoke(nameof(DropStalactite), 1f);
     }
 
-    private void Update()
-    {
-        if(Input.GetKeyDown(KeyCode.Space))
-            Release();
-    }
-
     private void DropStalactite()
     {
         _stalactiteBot.gravityScale = _gravityScale;
     }
 
-    private void OnCollisionEnter2D(Collision2D other)
+    public void ResetBot()
     {
-        Destroy(gameObject);
+        _wasReleased = false;
+        _animator.enabled = false;
+        _stalactiteBot.gravityScale = 0;
+        _stalactiteBot.velocity = Vector2.zero;
+        _stalactiteBot.transform.position = _startingPos;
+        _stalactiteBot.angularVelocity = 0f;
+        _stalactiteBot.transform.rotation = Quaternion.identity;
     }
 }

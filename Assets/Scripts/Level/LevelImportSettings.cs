@@ -16,9 +16,11 @@ namespace Level
 
         [SerializeField] private int _pixelPerUnit;
         [SerializeField] private float _unitSize;
+        [SerializeField] private int _maxGroundTiles;
         [SerializeField] private ColorMapping[] _colorMapping;
 
         public float UnitSize => _unitSize;
+        public int MaxGroundTiles => _maxGroundTiles;
 
         public Vector2 GetPosition(int pixelWidth, int pixelHeight)
         {
