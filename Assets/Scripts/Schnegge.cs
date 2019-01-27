@@ -15,7 +15,7 @@ public class Schnegge : MonoBehaviour
     [SerializeField] private float _maxSpeedSmooth = 4f;
     [SerializeField] private float _jumpDuration = 0.3f;
     [SerializeField] private float _jumpSpeed = 3f;
-    
+
     private Action _walkSoundDisposable;
     [SerializeField] private float _speedX = 2f;
     private float _timeSinceBeginningOfJump;
