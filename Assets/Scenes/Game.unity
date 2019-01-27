@@ -857,6 +857,26 @@ PrefabInstance:
       propertyPath: _defaultGravity
       value: 9.61
       objectReference: {fileID: 0}
+    - target: {fileID: 5215363383854146149, guid: 6d4a5e5c8cf744b40a081b0bdaf31623,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215363384779010081, guid: 6d4a5e5c8cf744b40a081b0bdaf31623,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215363385468322286, guid: 6d4a5e5c8cf744b40a081b0bdaf31623,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5215363385516557321, guid: 6d4a5e5c8cf744b40a081b0bdaf31623,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7248645766468458717, guid: 6d4a5e5c8cf744b40a081b0bdaf31623,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -961,6 +981,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5304187465364564342, guid: 6d4a5e5c8cf744b40a081b0bdaf31623,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d4a5e5c8cf744b40a081b0bdaf31623, type: 3}
