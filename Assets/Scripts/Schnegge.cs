@@ -183,8 +183,6 @@ public class Schnegge : MonoBehaviour
 
         if (danger != null)
         {
-            SoundService.PlaySound(Sound.Danger);
-
             switch (State)
             {
                 case State.Shell:
