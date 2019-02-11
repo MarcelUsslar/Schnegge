@@ -30,17 +30,20 @@ namespace TileMapGeneration
         private TileType[,] _terrainMap;
         private int _height;
         private int _width;
-
-        public void Setup(List<Vector2> points, LevelImportSettings settings)
+        
+        public void Setup(List<Vector2> points, LevelImportSettings settings, bool isGround)
         {
             _colliderPoints = points;
             _settings = settings;
 
-            PrepareTileMap();
+            if (isGround)
+            {
+                PrepareTileMap();
 
-            SetTerrain();
+                SetTerrain();
 
-            GenerateTiles();
+                GenerateTiles(); 
+            }
 
             GenerateSpriteShape();
         }
@@ -48,18 +51,27 @@ namespace TileMapGeneration
         private void GenerateSpriteShape()
         {
             gameObject.AddComponent<EdgeCollider2D>();
+            gameObject.AddComponent<SpriteShapeRenderer>();
             
             var shapeController = gameObject.AddComponent<SpriteShapeController>();
             shapeController.spriteShape = _config.GrassShape;
+            shapeController.splineDetail = 16;
+            shapeController.colliderDetail = 16;
+            shapeController.colliderCornerType = ColliderCornerType.Square;
 
             var spline = shapeController.spline;
             spline.Clear();
-            
+
             for (var i = 0; i < _colliderPoints.Count; i++)
             {
-                InsertPoint(spline, i, _colliderPoints[i], ShapeTangentMode.Continuous);
+                InsertPoint(spline, i, _colliderPoints[i], (i == 0 || i == _colliderPoints.Count - 1) ? ShapeTangentMode.Linear : ShapeTangentMode.Continuous);
             }
             
+            var y = _colliderPoints.Min(point => point.y) - 1;
+
+            _colliderPoints.Add(new Vector2(_colliderPoints[_colliderPoints.Count - 1].x, y));
+            _colliderPoints.Add(new Vector2(_colliderPoints[0].x, y));
+
             var splinePointCount = spline.GetPointCount();
             for (var i = 0; i < splinePointCount; i++)
             {
@@ -70,8 +82,10 @@ namespace TileMapGeneration
                     GetTangent(i, _colliderPoints[(i - 1 + splinePointCount) % splinePointCount],
                         _colliderPoints[(i + 1 + splinePointCount) % splinePointCount], false));
             }
-            
-            shapeController.colliderCornerType = ColliderCornerType.Square;
+
+            InsertPoint(spline, splinePointCount, new Vector2(_colliderPoints[_colliderPoints.Count - 2].x, y), ShapeTangentMode.Linear);
+            InsertPoint(spline, splinePointCount + 1, new Vector2(_colliderPoints[_colliderPoints.Count - 1].x, y), ShapeTangentMode.Linear);
+
             shapeController.BakeCollider();
         }
 
@@ -80,11 +94,20 @@ namespace TileMapGeneration
             var beforeDiff = _colliderPoints[currentIndex] - beforePoint;
             var afterDiff = _colliderPoints[currentIndex] - afterPoint;
 
+            if (beforeDiff.normalized == afterDiff.normalized)
+            {
+                return 0.25f * (previous ? beforeDiff : afterDiff);
+            }
+
             var normal = (afterDiff.normalized + beforeDiff.normalized).normalized;
+            if (normal.y < 0)
+            {
+                normal *= -1;
+            }
+            
+            var tangent = Vector3.Cross(previous ? Vector3.forward : Vector3.back, normal).normalized;
 
-            var tangent = Vector3.Cross(previous ? Vector3.forward : Vector3.back , normal).normalized;
-
-            return tangent * 0.25f;
+            return tangent * 0.25f * (previous ? beforeDiff.magnitude : afterDiff.magnitude);
         }
 
         private void InsertPoint(Spline spline, int index, Vector3 point, ShapeTangentMode mode)
@@ -144,7 +167,6 @@ namespace TileMapGeneration
                 {
                     for (var height = grassHeight; height < _height && height <= grassHeight + _settings.MaxGroundTiles; height++)
                     {
-                        Debug.LogWarning(height + " " + _height);
                         _terrainMap[w, height] = TileType.Earth;
                     }
                 }

@@ -57,27 +57,19 @@ namespace Level
         private void GenerateCollider()
         {
             GenerateEdgeCollider(_levelPoints, "Level", true);
+
             foreach (var key in _flyingIslandMapping.Keys)
             {
                 GenerateEdgeCollider(_flyingIslandMapping[key], key.ToString(), false);
             }
         }
 
-        private void GenerateEdgeCollider(List<Vector2> points, string objectName, bool generateTileMap)
+        private void GenerateEdgeCollider(List<Vector2> points, string objectName, bool isGround)
         {
             var edgeColliderObject = CreateChildObject(objectName, _generatedLevel.transform);
-            
-            if (generateTileMap)
-            {
-                var tileMapGenerator = edgeColliderObject.AddComponent<TileVisualizer>();
-                tileMapGenerator.Setup(points, _settings); 
-            }
 
-            var lineRenderer = edgeColliderObject.AddComponent<LineRenderer>();
-            lineRenderer.useWorldSpace = false;
-            lineRenderer.widthMultiplier = 0.1f * _settings.UnitSize;
-            lineRenderer.positionCount = points.Count;
-            lineRenderer.SetPositions(points.Select(vec => (Vector3)vec).ToArray());
+            var tileMapGenerator = edgeColliderObject.AddComponent<TileVisualizer>();
+            tileMapGenerator.Setup(points, _settings, isGround);
         }
 
         private void GenerateAttackTriggers()
