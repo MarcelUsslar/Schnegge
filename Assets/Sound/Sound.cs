@@ -5,4 +5,6 @@
     Hit,
     Jump,
     Walk,
+    Kick,
+    Danger,
 }

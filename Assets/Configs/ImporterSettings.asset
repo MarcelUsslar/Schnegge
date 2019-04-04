@@ -10,14 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fac0efeca871aca43b55356881b19a91, type: 3}
-  m_Name: LevelImportSettings
+  m_Name: ImporterSettings
   m_EditorClassIdentifier: 
-  _pixelPerUnit: 2
+  _pixelPerUnit: 10
   _unitSize: 4
+  _maxGroundTiles: 10
   _colorMapping:
   - Color: {r: 0, g: 0, b: 0, a: 1}
     ColorAction: 1
   - Color: {r: 0, g: 0, b: 1, a: 1}
     ColorAction: 2
   - Color: {r: 1, g: 0, b: 0, a: 1}
+    ColorAction: 3
+  - Color: {r: 1, g: 1, b: 0, a: 1}
+    ColorAction: 3
+  - Color: {r: 1, g: 0, b: 1, a: 1}
     ColorAction: 3

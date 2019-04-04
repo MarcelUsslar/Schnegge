@@ -7,11 +7,20 @@ namespace Level
     [CreateAssetMenu(menuName = "Level/Level Import Setting", fileName = "LevelImportSettings")]
     public class LevelImportSettings : ScriptableObject
     {
+        [Serializable]
+        private class ColorMapping
+        {
+            public Color Color;
+            public ColorAction ColorAction;
+        }
+
         [SerializeField] private int _pixelPerUnit;
         [SerializeField] private float _unitSize;
+        [SerializeField] private int _maxGroundTiles;
         [SerializeField] private ColorMapping[] _colorMapping;
 
         public float UnitSize => _unitSize;
+        public int MaxGroundTiles => _maxGroundTiles;
 
         public Vector2 GetPosition(int pixelWidth, int pixelHeight)
         {
@@ -25,13 +34,6 @@ namespace Level
                 return ColorAction.None;
 
             return foundMapping.ColorAction;
-        }
-
-        [Serializable]
-        private class ColorMapping
-        {
-            public Color Color;
-            public ColorAction ColorAction;
         }
     }
 }

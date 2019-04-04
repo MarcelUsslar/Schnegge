@@ -1,12 +1,13 @@
 ﻿using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Fader : MonoBehaviour
 {
     [SerializeField] private Image _image;
     [SerializeField] private float _fadingTime;
-
+    [SerializeField] private GameObject _textHighscore;
     private float _currentAlpha = 1;
     private bool _fadedIn;
 
@@ -18,8 +19,7 @@ public class Fader : MonoBehaviour
     [UsedImplicitly] private void Start()
     {
         _instance = this;
-        _image.color = Color.black;
-        FadeIn();
+        //image.color = Color.black
     }
 
     public static void FadeIn()
@@ -28,6 +28,7 @@ public class Fader : MonoBehaviour
             return;
 
         _instance._fadingIn = true;
+
     }
 
     public static void FadeOut()
@@ -36,10 +37,17 @@ public class Fader : MonoBehaviour
             return;
 
         _instance._fadingOut = true;
+        
     }
 
-    [UsedImplicitly] private void Update()
+    [UsedImplicitly]
+    private void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            FadeIn();
+            _textHighscore.SetActive(false);
+        }
         if (_fadingOut)
             IncrementAlpha(Time.deltaTime/_fadingTime);
 
@@ -65,6 +73,6 @@ public class Fader : MonoBehaviour
             _currentAlpha = 0;
         }
 
-        _image.color = new Color(0, 0, 0, _currentAlpha);
+        _image.color = new Color(1, 1, 1, _currentAlpha);
     }
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using Attacks;
 using UnityEngine;
+using TileMapGeneration;
 
 namespace Level
 {
@@ -55,25 +56,20 @@ namespace Level
 
         private void GenerateCollider()
         {
-            GenerateEdgeCollider(_levelPoints, "Level");
+            GenerateEdgeCollider(_levelPoints, "Level", true);
+
             foreach (var key in _flyingIslandMapping.Keys)
             {
-                GenerateEdgeCollider(_flyingIslandMapping[key], key.ToString());
+                GenerateEdgeCollider(_flyingIslandMapping[key], key.ToString(), false);
             }
         }
 
-        private void GenerateEdgeCollider(List<Vector2> points, string objectName)
+        private void GenerateEdgeCollider(List<Vector2> points, string objectName, bool isGround)
         {
             var edgeColliderObject = CreateChildObject(objectName, _generatedLevel.transform);
 
-            var edgeCollider = edgeColliderObject.AddComponent<EdgeCollider2D>();
-            edgeCollider.points = points.ToArray();
-
-            var lineRenderer = edgeColliderObject.AddComponent<LineRenderer>();
-            lineRenderer.useWorldSpace = false;
-            lineRenderer.widthMultiplier = 0.1f * _settings.UnitSize;
-            lineRenderer.positionCount = points.Count;
-            lineRenderer.SetPositions(points.Select(vec => (Vector3)vec).ToArray());
+            var tileMapGenerator = edgeColliderObject.AddComponent<TileVisualizer>();
+            tileMapGenerator.Setup(points, _settings, isGround);
         }
 
         private void GenerateAttackTriggers()
@@ -85,7 +81,7 @@ namespace Level
                 {
                     var triggerObject = CreateChildObject($"Trigger{i}", attackTriggerParent.transform);
                     var attackTrigger = triggerObject.AddComponent<AttackTrigger>();
-                    attackTrigger.Setup(_settings.UnitSize);
+                    attackTrigger.Setup(key, _settings.UnitSize);
                     attackTrigger.transform.position = _attackTriggerMapping[key][i];
                 }
             }

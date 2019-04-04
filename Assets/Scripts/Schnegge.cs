@@ -1,29 +1,231 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 
 public class Schnegge : MonoBehaviour
 {
-    [SerializeField] private float _shellGravityScale = 2f;
+    [SerializeField] private Rigidbody2D _rigidBody;
+    [SerializeField] private SchneggeState[] _schneggeStates;
+    [SerializeField] private PhysicsMaterial2D _shellMaterial;
+    [SerializeField] private PhysicsMaterial2D _walkMaterial;
+    [Space(10)]
+
+    [SerializeField] private float _glideGravityScale = 0.2f;
     [SerializeField] private float _perfectBlockSpeedBoost = 2f;
     [SerializeField] private float _maxSpeedSmooth = 4f;
     [SerializeField] private float _jumpDuration = 0.3f;
-    [SerializeField] private float _walkTransitionTime = 0.5f;
     [SerializeField] private float _jumpSpeed = 3f;
-    [SerializeField] private float _bounciness = 0.4f;
-
-    [SerializeField] private Rigidbody2D _rigidBody;
-    
-    private SchneggeState[] _schneggeStates;
-
-    public bool PerfectlyBlockedLastFrame;
+    [SerializeField] private float _defaultSpeed;
+    [SerializeField] private float _defaultGravity;
 
     private Action _walkSoundDisposable;
-    private State _state;
-    private float _speedX = 2f;
+    private float _speedX;
     private float _timeSinceBeginningOfJump;
-    private float _timeSinceLastWalkingTransition;
-
     private bool _isOnGround = true;
+
+    private Vector3 startPos;
+
+    private State State
+    {
+        get { return _schneggeStates.First(state => state.IsActive).State; }
+        set
+        {
+            foreach (var state in _schneggeStates)
+            {
+                state.IsActive = state.State == value;
+            }
+        }
+    }
+
+    private void Start()
+    {
+        State = State.Shell;
+        startPos = transform.position;
+    }
+    
+    private void Update()
+    {
+        if (State == State.Dead)
+            return;
+
+        if (IsJumping)
+            EvaluateJumpTime();
+
+        if (MousePressedUp)
+            TryJumping();
+
+        if (MousePressedDown)
+            TryWalking();
+        
+        if (IsWalking)
+            VelocityX = _speedX;
+        
+        SmoothSpeed();
+
+        if (IsWalking)
+            ClampRotation(0.375f);
+    }
+
+    private void TryJumping()
+    {
+        if (_isOnGround)
+            Jump();
+        else
+            Shield();
+    }
+
+    private void Jump()
+    {
+        _isOnGround = false;
+
+        VelocityY = _jumpSpeed;
+        VelocityX /= 4;
+
+        SoundService.PlaySound(Sound.Jump);
+
+        Shield();
+    }
+
+    private void Shield()
+    {
+        WalkSoundDisposable = null;
+
+        State = State.Jump;
+
+        _rigidBody.sharedMaterial = _shellMaterial;
+        _rigidBody.gravityScale = _defaultGravity;
+    }
+
+    private void TryWalking()
+    {
+        if (_isOnGround)
+            Walk();
+        else
+            Glide();
+    }
+
+    private void Walk()
+    {
+        OnLanding();
+
+        ResetShellPhysics();
+    }
+
+    private void OnLanding()
+    {
+        State = State.Walk;
+        WalkSoundDisposable = SoundService.PlaySound(Sound.Walk, true);
+        VelocityX = _defaultSpeed;
+    }
+    
+    private void Glide()
+    {
+        _rigidBody.gravityScale = _glideGravityScale;
+        State = State.Glide;
+        
+        ResetShellPhysics();
+    }
+
+    private void ResetShellPhysics()
+    {
+        _rigidBody.transform.rotation = Quaternion.identity;
+        _rigidBody.angularVelocity = 0f;
+        _rigidBody.sharedMaterial = _walkMaterial;
+    }
+
+    private void ClampRotation(float boundary)
+    {
+        var rot = transform.rotation;
+        var rotZClamped = Mathf.Clamp(rot.z, -boundary, boundary);
+        transform.rotation = new Quaternion(rot.x, rot.y, rotZClamped, rot.w);
+    }
+
+    private void EvaluateJumpTime()
+    {
+        _timeSinceBeginningOfJump += Time.deltaTime;
+
+        if (_timeSinceBeginningOfJump <= _jumpDuration)
+            return;
+
+        _timeSinceBeginningOfJump = 0f;
+        State = State.Shell;
+    }
+
+    private void SmoothSpeed()
+    {
+        // TODO: make this smooth
+    }
+
+    public bool IsJumping => State == State.Jump;
+    private bool IsWalking => State == State.Walk;
+    private bool IsShielding => State == State.Shell;
+    private bool IsGliding => State == State.Glide;
+
+    private bool MousePressedDown => Input.GetMouseButtonDown(0);
+    private bool MousePressedUp => Input.GetMouseButtonUp(0);
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (IsGliding)
+            OnLanding();
+
+        _isOnGround = !IsJumping;
+
+        var danger = other.gameObject.GetComponent<Danger>();
+        if (danger != null)
+        {
+            SoundService.PlaySound(Sound.Danger);
+
+            switch (State)
+            {
+                case State.Shell:
+                    Block(danger);
+                    break;
+                case State.Walk:
+                case State.Glide:
+                    Danger(danger);
+                    break;
+                case State.Jump:
+                    PerfectBlock(danger);
+                    break;
+            }
+        }
+        else
+        {
+            _rigidBody.gravityScale = _defaultGravity;
+        }
+    }
+
+    private void OnCollisionExit2D(Collision2D other)
+    {
+        _isOnGround = false;
+    }
+
+    private void Danger(Danger danger)
+    {
+        SoundService.PlaySound(Sound.Hit);
+        State = State.Dead;
+        Invoke(nameof(ResetGame),3f);
+    }
+
+    private void ResetGame(){
+        Fader.FadeOut();
+        FindObjectOfType<ScoreCounter>().resetScore();
+        transform.position = startPos;
+        Level.LevelGenerator.Instance.ResetMap();
+        State = State.Shell;
+    }
+
+    private void PerfectBlock(Danger danger)
+    {
+        VelocityX += _perfectBlockSpeedBoost;
+        Block(danger);
+    }
+
+    private void Block(Danger danger)
+    {
+        SoundService.PlaySound(Sound.Block);
+    }
 
     private Action WalkSoundDisposable
     {
@@ -34,143 +236,19 @@ public class Schnegge : MonoBehaviour
         }
     }
 
-    private void Start()
+    private float VelocityX
     {
-        _schneggeStates = GetComponentsInChildren<SchneggeState>();
-    }
-    
-    private void Update()
-    {
-        if (IsWalking)
-            _state = TransitionWalk();
-        
-        if (IsJumping)
-            _state = TransitionJump();
-        
-        if (Input.GetKeyUp(KeyCode.Mouse0) && _isOnGround)
-            Jump();
-
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        get { return _rigidBody.velocity.x; }
+        set
         {
-            _speedX = 2f;
-            _rigidBody.transform.rotation = Quaternion.identity;
-            _rigidBody.angularVelocity = 0f;
-            _rigidBody.sharedMaterial.bounciness = 0f;
-            _state = State.Walk1;
-            WalkSoundDisposable = SoundService.PlaySound(Sound.Walk, true);
-        }
-            
-        
-        if (IsWalking)
-            UpdateSpeed();
-
-        if (PerfectlyBlockedLastFrame)
-        {
-            PerfectlyBlockedLastFrame = false;
-            _speedX += _perfectBlockSpeedBoost;
-            UpdateSpeed();
-        }
-
-        UpdateVisuals();
-
-        UpdateGravityForce();
-
-        SmoothSpeed();
-    }
-
-    private State TransitionJump()
-    {
-        _timeSinceBeginningOfJump += Time.deltaTime;
-
-        if (_timeSinceBeginningOfJump <= _jumpDuration)
-            return _state;
-
-        _timeSinceBeginningOfJump = 0f;
-        return State.Shell;
-    }
-
-    private void Jump()
-    {
-        WalkSoundDisposable = null;
-
-        _isOnGround = false;
-        _state = State.Jump;
-        _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, _jumpSpeed);
-        _rigidBody.sharedMaterial.bounciness = _bounciness;
-        _speedX /= 4;
-        UpdateSpeed();
-        SoundService.PlaySound(Sound.Jump);
-    }
-
-    private void SmoothSpeed()
-    {
-        // TODO: make this smooth
-    }
-
-    public bool IsJumping => _state == State.Jump;
-
-    private State TransitionWalk()
-    {
-        _timeSinceLastWalkingTransition += Time.deltaTime;
-
-        if (_timeSinceLastWalkingTransition <= _walkTransitionTime)
-            return _state;
-
-        _timeSinceLastWalkingTransition = 0f;
-
-        switch (_state)
-        {
-            case State.Walk1:
-                return State.Walk2;
-            case State.Walk2:
-                return State.Walk1;
-            default:
-                throw new ArgumentOutOfRangeException("_state", _state, null);
+            _speedX = value;
+            _rigidBody.velocity = new Vector2( value, VelocityY);
         }
     }
 
-    private void UpdateVisuals()
+    private float VelocityY
     {
-        foreach (var schneggeState in _schneggeStates)
-        {
-            schneggeState.IsActive = schneggeState.State == _state;
-        }
-    }
-
-    private void UpdateSpeed()
-    {
-        _rigidBody.velocity = new Vector2(_speedX, _rigidBody.velocity.y);
-    }
-
-    private void UpdateGravityForce()
-    {
-        _rigidBody.gravityScale = _state == State.Shell 
-            ? _shellGravityScale 
-            : 1;
-    }
-
-    private bool IsWalking
-    {
-        get
-        {
-            switch (_state)
-            {
-                case State.Shell:
-                    return false;
-                case State.Walk1:
-                case State.Walk2:
-                    return true;
-                case State.Dead:
-                case State.Jump:
-                    return false;
-                default:
-                    throw new ArgumentOutOfRangeException("_state", _state, null);
-            }
-        }
-    }
-
-    private void OnCollisionEnter2D(Collision2D other)
-    {
-        _isOnGround = _state != State.Jump;
+        get { return _rigidBody.velocity.y; }
+        set { _rigidBody.velocity = new Vector2(VelocityX, value); }
     }
 }

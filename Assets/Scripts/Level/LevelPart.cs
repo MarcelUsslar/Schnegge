@@ -22,7 +22,7 @@ namespace Level
         {
             if (previousPart == null)
             {
-                gameObject.transform.position = Vector3.zero;
+                gameObject.transform.position = Vector3.zero - LevelStartPoint.position;
                 return;
             }
             
@@ -36,7 +36,7 @@ namespace Level
         {
             if (nextPart == null)
             {
-                gameObject.transform.position = Vector3.zero;
+                gameObject.transform.position = Vector3.zero - LevelEndPoint.position;
                 return;
             }
 
@@ -54,8 +54,10 @@ namespace Level
 
         private void DrawCircle(Transform targetObject, Color circleColor, float size)
         {
+#if UNITY_EDITOR
             Handles.color = circleColor;
-            Handles.DrawWireDisc(targetObject.position, Vector3.forward, size);
+            Handles.DrawWireDisc(targetObject.position, Vector3.forward, size); 
+#endif
         }
 
         public void Reset()
