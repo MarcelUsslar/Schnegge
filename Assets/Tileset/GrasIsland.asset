@@ -10,13 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: af7181f404f1447c0a7a17b3070b952b, type: 3}
-  m_Name: New SpriteShapeProfile
+  m_Name: GrasIsland
   m_EditorClassIdentifier: 
   m_Angles:
   - m_Start: -180
     m_End: 180
     m_Order: 0
-    m_Sprites: []
+    m_Sprites:
+    - {fileID: 21300000, guid: e0c7449040a86604b99d5b7238a78163, type: 3}
+    - {fileID: 21300000, guid: 7ead75f894da17d4381d6f50b17004c3, type: 3}
+    - {fileID: 21300000, guid: 68d3d1e1b2588ae42869d7ce03c074e3, type: 3}
   m_FillTexture: {fileID: 0}
   m_CornerSprites:
   - m_CornerType: 0
@@ -43,7 +46,7 @@ MonoBehaviour:
   - m_CornerType: 7
     m_Sprites:
     - {fileID: 0}
-  m_FillPixelPerUnit: 100
+  m_FillPixelPerUnit: 1024
   m_BevelSize: 0
   m_BevelCutoff: 0
   m_FillOffset: 0

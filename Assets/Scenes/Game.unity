@@ -1243,6 +1243,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Schnegge
       objectReference: {fileID: 0}
+    - target: {fileID: 5215363384865592121, guid: 6d4a5e5c8cf744b40a081b0bdaf31623,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7248645766468458717, guid: 6d4a5e5c8cf744b40a081b0bdaf31623,
         type: 3}
       propertyPath: m_LocalPosition.x

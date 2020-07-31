@@ -39,7 +39,8 @@ namespace Attacks
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            if (_danger == null)
+            var schnegge = other.gameObject.GetComponent<Schnegge>();
+            if (_danger == null || schnegge != null && schnegge.IsDead)
                 return;
                 
             _danger.MakeDanger();

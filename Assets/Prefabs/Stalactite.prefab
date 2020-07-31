@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 2864585254763748314}
   - component: {fileID: 2864585254763748309}
   - component: {fileID: 1763889063}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: stalagtite_bot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 2864585255314795854}
   - component: {fileID: 2864585255314795848}
   - component: {fileID: 2864585255314795849}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Stalactite
   m_TagString: Untagged
   m_Icon: {fileID: 0}

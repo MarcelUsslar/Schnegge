@@ -45,6 +45,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _footPrefab: {fileID: 7381825976973747666, guid: 0fc21738f3143c44884a5b9c1f85b978,
     type: 3}
-  _startingRarity: 5000
+  _minimumScore: 1000
+  _maximumScore: 15000
+  _minimumSpawnDelay: 5
+  _maximumSpawnDelay: 10
+  _spawnRandomOffset: 2
   _offsetX: 5
   _offsetY: 80

@@ -52,7 +52,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidBody2D: {fileID: 5622760159979716778}
-  _speed: 60
+  _fallSpeed: 60
+  _horizontalSpeed: 10
+  _verticalSpeed: 20
 --- !u!50 &5622760159979716778
 Rigidbody2D:
   serializedVersion: 4

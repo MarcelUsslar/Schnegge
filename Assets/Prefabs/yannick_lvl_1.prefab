@@ -7,21 +7,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7080983283889871247, guid: 9d16ad7699ade5c4aa16efc747f718c8,
+        type: 3}
+      propertyPath: _levelStartPoint
+      value: 
+      objectReference: {fileID: 4206591395098379848}
+    - target: {fileID: 7080983283889871247, guid: 9d16ad7699ade5c4aa16efc747f718c8,
+        type: 3}
+      propertyPath: _levelEndPoint
+      value: 
+      objectReference: {fileID: 8109971666201615648}
     - target: {fileID: 4047841332129088283, guid: 9d16ad7699ade5c4aa16efc747f718c8,
         type: 3}
       propertyPath: m_Name
       value: yannick_lvl_1
       objectReference: {fileID: 0}
-    - target: {fileID: 7080983283889871247, guid: 9d16ad7699ade5c4aa16efc747f718c8,
-        type: 3}
-      propertyPath: _levelStartPoint
-      value: 
-      objectReference: {fileID: 1260635696798089132}
-    - target: {fileID: 7080983283889871247, guid: 9d16ad7699ade5c4aa16efc747f718c8,
-        type: 3}
-      propertyPath: _levelEndPoint
-      value: 
-      objectReference: {fileID: 1260635696798089139}
     - target: {fileID: 7636699870440136387, guid: 9d16ad7699ade5c4aa16efc747f718c8,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -7299,13 +7299,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d16ad7699ade5c4aa16efc747f718c8, type: 3}
---- !u!1 &1260635696798089132 stripped
+--- !u!1 &4206591395098379848 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3107059239841855874, guid: 9d16ad7699ade5c4aa16efc747f718c8,
     type: 3}
   m_PrefabInstance: {fileID: 1260635696798089162}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1260635696798089139 stripped
+--- !u!1 &8109971666201615648 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7057920443583144682, guid: 9d16ad7699ade5c4aa16efc747f718c8,
     type: 3}

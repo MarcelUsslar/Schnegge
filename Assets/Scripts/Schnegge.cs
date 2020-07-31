@@ -23,7 +23,8 @@ public class Schnegge : MonoBehaviour
     private float _timeSinceBeginningOfJump;
     private bool _isOnGround = true;
 
-    private Vector3 startPos;
+    private Vector3 _startPos;
+    private bool _restartingGame = false;
 
     private State State
     {
@@ -39,14 +40,22 @@ public class Schnegge : MonoBehaviour
 
     private void Start()
     {
-        State = State.Shell;
-        startPos = transform.position;
+        State = State.Dead;
+        _startPos = transform.position;
     }
     
     private void Update()
     {
-        if (State == State.Dead)
+        if (IsDead)
+        {
+            VelocityX = 0;
+            VelocityY = 0;
+
+            if (MousePressedDown && !_restartingGame)
+                State = State.Shell;
+
             return;
+        }
 
         if (IsJumping)
             EvaluateJumpTime();
@@ -156,9 +165,9 @@ public class Schnegge : MonoBehaviour
         // TODO: make this smooth
     }
 
+    public bool IsDead => State == State.Dead;
     public bool IsJumping => State == State.Jump;
     private bool IsWalking => State == State.Walk;
-    private bool IsShielding => State == State.Shell;
     private bool IsGliding => State == State.Glide;
 
     private bool MousePressedDown => Input.GetMouseButtonDown(0);
@@ -174,19 +183,22 @@ public class Schnegge : MonoBehaviour
         var danger = other.gameObject.GetComponent<Danger>();
         if (danger != null)
         {
+            if (IsDead)
+                return;
+
             SoundService.PlaySound(Sound.Danger);
 
             switch (State)
             {
                 case State.Shell:
-                    Block(danger);
+                    Block();
                     break;
                 case State.Walk:
                 case State.Glide:
-                    Danger(danger);
+                    Kill();
                     break;
                 case State.Jump:
-                    PerfectBlock(danger);
+                    PerfectBlock();
                     break;
             }
         }
@@ -201,28 +213,37 @@ public class Schnegge : MonoBehaviour
         _isOnGround = false;
     }
 
-    private void Danger(Danger danger)
+    private void Kill()
     {
-        SoundService.PlaySound(Sound.Hit);
+        _rigidBody.gravityScale = _defaultGravity;
         State = State.Dead;
-        Invoke(nameof(ResetGame),3f);
+
+        WalkSoundDisposable = null;
+        SoundService.PlaySound(Sound.Hit);
+
+        _restartingGame = true;
+        Invoke(nameof(ResetGame),2f);
     }
 
-    private void ResetGame(){
+    private void ResetGame()
+    {
+        _restartingGame = false;
         Fader.FadeOut();
+
+        ResetShellPhysics();
+        transform.position = _startPos;
+
         FindObjectOfType<ScoreCounter>().resetScore();
-        transform.position = startPos;
         Level.LevelGenerator.Instance.ResetMap();
-        State = State.Shell;
     }
 
-    private void PerfectBlock(Danger danger)
+    private void PerfectBlock()
     {
         VelocityX += _perfectBlockSpeedBoost;
-        Block(danger);
+        Block();
     }
 
-    private void Block(Danger danger)
+    private void Block()
     {
         SoundService.PlaySound(Sound.Block);
     }
@@ -238,7 +259,7 @@ public class Schnegge : MonoBehaviour
 
     private float VelocityX
     {
-        get { return _rigidBody.velocity.x; }
+        get => _rigidBody.velocity.x;
         set
         {
             _speedX = value;
@@ -248,7 +269,7 @@ public class Schnegge : MonoBehaviour
 
     private float VelocityY
     {
-        get { return _rigidBody.velocity.y; }
-        set { _rigidBody.velocity = new Vector2(VelocityX, value); }
+        get => _rigidBody.velocity.y;
+        set => _rigidBody.velocity = new Vector2(VelocityX, value);
     }
 }

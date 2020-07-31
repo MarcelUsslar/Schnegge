@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using UnityEngine;
 using TMPro;
 
 public class ScoreCounter : MonoBehaviour
@@ -12,8 +9,9 @@ public class ScoreCounter : MonoBehaviour
     [SerializeField] private TextMeshProUGUI textHighscore;
     [SerializeField] private GameObject schnegge;
     [SerializeField] private float scoreCountingSpeed = 10;
-    private int _score;
+    private int _score = 0;
     private int _highscore;
+    private float _startPosition;
 
     public int Score => _score;
     public float ScoreCountingSpeed => scoreCountingSpeed;
@@ -21,7 +19,7 @@ public class ScoreCounter : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        _score = (int)(schnegge.transform.position.x * scoreCountingSpeed);
+        _score = Mathf.Max((int)((schnegge.transform.position.x - _startPosition) * scoreCountingSpeed), _score);
         text.text = _score.ToString();
 
     }
@@ -48,5 +46,6 @@ public class ScoreCounter : MonoBehaviour
         }
 
         Instance = this;
+        _startPosition = schnegge.transform.position.x;
     }
 }
